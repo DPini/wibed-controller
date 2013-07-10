@@ -1,0 +1,22 @@
+<!doctype html>
+<head>
+    <title>Wibed Server</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="style.css") }}">
+</head>
+<body>
+    <h1>Wibed Server</h1>
+    <ul class="metanav">
+        <li>
+            <a href="{{ url_for("experiment.list") }}">Experiments</a>
+        </li>
+        <li>
+            <a href="{{ url_for("node.list") }}">Nodes</a>
+        </li>
+    </ul>
+    {% for message in get_flashed_messages() %}
+        <div class="flash">{{ message }}</div>
+    {% endfor %}
+    <div class="body">
+    {% block body %}{% endblock %}
+    </div>
+</body>

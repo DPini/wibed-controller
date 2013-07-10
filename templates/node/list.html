@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h1>Nodes</h1>
+    <a href="{{ url_for("node.add") }}">Add Node</a>
+    <ul class="nodeList">
+    {% for node in nodes %}
+        <li>
+            <a href="{{ url_for("node.show", id=node.id) }}">{{node.id}}</a>
+        </li>
+    {% else %}
+        <li><em>No nodes exist</em></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

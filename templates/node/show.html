@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h1>Node '{{node.id}}'</h1>
+    <a href="{{url_for("node.remove", id=node.id)}}">Remove</a>
+    <ul class="nodeProperties">
+        <li>
+            <strong>Model:</strong> {{node.model}}
+        </li>
+        <li>
+            <strong>Version:</strong> {{node.version}}
+        </li>
+        <li>
+            <strong>Last contact:</strong> {{node.lastContact}}
+        </li>
+        <li>
+            <strong>Status:</strong> {{node.status.name | capitalize}}
+        </li>
+        <li>
+            <strong>Current experiment:</strong>
+            {% if node.activeExperiment %}
+                <a href="{{url_for("experiment.show", id=node.activeExperiment.id)}}">
+                    {{node.activeExperiment.name | safe}}
+                </a>
+            {% else %}
+                None
+            {% endif %}
+        </li>
+        <li>
+            <strong>Previous experiments:</strong>
+            <ul>
+                {% for experiment in node.experiments %}
+                    {% if experiment != node.activeExperiment %}
+                        <li>
+                            <a href="{{url_for("experiment.show", id=experiment.id)}}">
+                                {{experiment.name | safe}}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    <li>No previous experiments.</li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+{% endblock %}

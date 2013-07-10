@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+    <form action="{{ url_for("node.add") }}" method="post" class="nodeAdd">
+        <fieldset>
+            <legend>Add Node</legend>
+            <ul>
+                <li>
+                    <label for="id">ID:</label>
+                    <input type="text" name="id" id="id" size="30" />
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset class="buttons">
+            <input type="submit" class="submit" value="Add" />
+        </fieldset>
+    </form>
+{% endblock %}

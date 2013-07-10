@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h1>Command '{{command.command}}'</h1>
+    in experiment <a href="{{url_for("experiment.show", id=command.experiment.id)}}">'{{command.experiment.name}}'</a>
+    <h2>Results</h2>
+    <ul class="resultList">
+    {% for execution in executions %}
+        <li>
+            Node: {{execution.node.id | safe}}<br /> 
+            Result: 
+                <ul>
+                    <li>
+                        <strong>Exit code:</strong>{{execution.exitCode}}
+                    </li>
+                    <li>
+                        <strong>Stdout:</strong><br />
+                        {{execution.stdout}}
+                    </li>
+                    <li>
+                        <strong>Stderr:</strong><br />
+                        {{execution.stderr}}
+                    </li>
+                </ul>
+        </li>
+    {% else %}
+        <li><em>No results available at this time.</em></li>
+    {% endfor %}
+    </ul>
+
+    <h2>Pending executions</h2>
+    <ul class="pendingList">
+    {% for node in pendingNodes %}
+        <li>
+            Node: {{node.id | safe}}
+        </li>
+    {% else %}
+        <li><em>No pending executions at this time.</em></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

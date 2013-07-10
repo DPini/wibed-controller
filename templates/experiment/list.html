@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h1>Experiments</h1>
+    <a href="{{ url_for("experiment.add") }}">Add Experiment</a>
+    <h2>Running experiments</h2>
+    <ul class="runningExperimentList">
+    {% for experiment in runningExperiments %}
+        <li>
+            <a href="{{ url_for("experiment.show", id=experiment.id) }}">{{experiment.name | safe}}</a> -
+            {{ experiment.status.name | safe | capitalize }} - 
+            <span class="nodeCount">{{ experiment.nodes.count() }} nodes</span>
+        </li>
+    {% else %}
+        <li><em>No experiments found</em></li>
+    {% endfor %}
+    </ul>
+
+    <h2>Finished experiments</h2>
+    <ul class="finishedExperimentList">
+    {% for experiment in finishedExperiments %}
+        <li>
+            <a href="{{ url_for("experiment.show", id=experiment.id) }}">{{experiment.name | safe}}</a>
+            <span class="nodeCount">{{ experiment.nodes.count() }} nodes</span>
+        </li>
+    {% else %}
+        <li><em>No experiments found</em></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

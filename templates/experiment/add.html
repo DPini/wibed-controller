@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
-    <form action="{{ url_for("experiment.add") }}" method="post" class="experimentAdd">
+    <form action="{{ url_for("experiment.add") }}" method="post" class="experimentAdd" enctype="multipart/form-data">
         <fieldset>
             <legend>Add Experiment</legend>
             <ul>
@@ -9,16 +9,29 @@
                     <input type="text" name="name" id="name" size="30" />
                 </li>
                 <li>
-                    <label for="overlay">Overlay:</label>
-                    <input type="text" name="overlay" id="overlay" size="30" />
+                    Overlay:
+                    <ul class="overlayList">
+                        <li>
+                            <input type="radio" name="overlay" id="overlay_new" value="NEW" />
+                            <label for="overlay_new">New</label>
+                            <br />
+                            <input type="file" name="overlay_file" id="overlay_file" />
+                        </li>
+                        {% for idx, overlay in overlays %}
+                            <li>
+                                <input type="radio" name="overlay" id="overlay_{{idx}}" value="{{overlay}}" /> 
+                                <label for="node_{{idx}}">{{overlay}}</label>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </li>
                 <li>
                     Nodes:
                     <ul class="nodeList">
                         {% for node in freeNodes %}
                             <li>
-                                <input type="checkbox" name="nodeIds" id="node.{{ node.id }}" value="{{ node.id }}" />
-                                <label for="node.{{ node.id }}">{{ node.id }}</label>
+                                <input type="checkbox" name="nodeIds" id="node_{{node.id}}" value="{{ node.id }}" />
+                                <label for="node_{{node.id}}">{{node.id}}</label>
                             </li>
                         {% else %}
                             <li>No nodes available.</li>

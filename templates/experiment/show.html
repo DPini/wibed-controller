@@ -41,7 +41,7 @@
     <ul class="nodeList">
     {% for node in nodes %}
         <li>
-            <a href="{{url_for("node.show", id=node.id)}}">{{node.id | safe}}</a>
+            <a href="{{url_for("node.show", id=node.id)}}">{{node.id}}</a>
             {% if experiment.status != Experiment.Status.FINISHED %}
             (<span class="nodeStatus">{{node.status.name | capitalize}}</span>)
             {% endif %}

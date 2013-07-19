@@ -45,21 +45,26 @@ def validateInput(input):
     if not input:
         raise Exception("No input data provided.")
 
-    if not "model" in input:
-        raise Exception("No model information provided.")
-
-    if not "version" in input:
-        raise Exception("No firmware version information provided.")
-
     if not "status" in input:
         raise Exception("No status information provided.")
 
     # Convert INT representation of status to Enum.
     input["status"] = Node.Status(input["status"])
 
+    if input["status"] == Node.Status.INIT:
+        if not "model" in input:
+            raise Exception("No model information provided.")
+
+        if not "version" in input:
+            raise Exception("No firmware version information provided.")
+
+
 def updateNode(node, input):
-    node.model = input["model"]
-    node.version = input["version"]
+    if "model" in input:
+        node.model = input["model"]
+    if "version" in input:
+        node.version = input["version"]
+
     node.lastContact = datetime.now()
     node.status = input["status"]
     db.session.commit()
@@ -94,7 +99,7 @@ def handleExperimentData(node, input, output):
     # If node is not in an active experiment but still thinks it is,
     # tell it to finish
     else:
-        if node.status not in [Node.Status.IDLE, Node.Status.UPGRADING]:
+        if node.status in [Node.Status.PREPARING, Node.Status.READY, Node.Status.RUNNING]:
             output["experiment"] = {}
             output["experiment"]["action"] = "FINISH"
 
@@ -115,4 +120,4 @@ def handleExperimentResults(node, experiment, input, output):
     lastNodeExecution = node.executions.order_by(Execution.commandId.desc()).first()
 
     if lastNodeExecution:
-        output["resultAck"] = lastNodeExecution.commandId
+        output["experiment"]["resultAck"] = lastNodeExecution.commandId

@@ -1,8 +1,11 @@
 """ Testbed experiment-related functionality. """
 
+import os
+
 from flask import Blueprint
 from flask import request, render_template, flash, redirect, \
-                  url_for
+                  url_for, current_app as app
+from werkzeug import secure_filename
 
 from database import db
 from models.experiment import Experiment
@@ -31,12 +34,43 @@ def add():
         query = Node.query.filter(Node.available == True)
         print(query)
         nodes = query.all()
-        return render_template("experiment/add.html", freeNodes=nodes)
+        overlays = enumerate(sorted(os.listdir(app.config["OVERLAY_DIR"])))
+        return render_template("experiment/add.html", freeNodes=nodes, 
+                overlays=overlays)
     elif request.method == "POST":
-        name = request.form["name"]
-        overlay = request.form["overlay"]
-        nodes = Node.query.filter(Node.id.in_(request.form.getlist("nodeIds"))).all()
         try:
+            try:
+                name = request.form["name"]
+
+                if not name:
+                    raise Exception("Invalid name")
+            except KeyError:
+                raise Exception("Name not specified")
+
+            try:
+                overlay = request.form["overlay"]
+            except KeyError:
+                raise Exception("Overlay not selected")
+
+            overlayFile = None
+
+            if overlay == "NEW":
+                try:
+                    overlayFile = request.files["overlay_file"]
+                    overlay = secure_filename(overlayFile.filename)
+                    overlayFile.save(os.path.join(app.config["OVERLAY_DIR"], 
+                        overlay))
+                except KeyError:
+                    raise Exception("Invalid overlay uploaded")
+
+            try:
+                nodes = Node.query.filter(Node.id.in_(request.form.getlist("nodeIds"))).all()
+
+                if not nodes:
+                    raise KeyError
+            except KeyError:
+                raise Exception("Can't setup an experiment with no nodes")
+
             experiment = Experiment(name, overlay, nodes)
             db.session.add(experiment)
             db.session.commit()

@@ -6,8 +6,8 @@
     <ul class="runningExperimentList">
     {% for experiment in runningExperiments %}
         <li>
-            <a href="{{ url_for("experiment.show", id=experiment.id) }}">{{experiment.name | safe}}</a> -
-            {{ experiment.status.name | safe | capitalize }} - 
+            <a href="{{ url_for("experiment.show", id=experiment.id) }}">{{experiment.name}}</a> -
+            {{ experiment.status.name | capitalize }} - 
             <span class="nodeCount">{{ experiment.nodes.count() }} nodes</span>
         </li>
     {% else %}
@@ -19,7 +19,7 @@
     <ul class="finishedExperimentList">
     {% for experiment in finishedExperiments %}
         <li>
-            <a href="{{ url_for("experiment.show", id=experiment.id) }}">{{experiment.name | safe}}</a>
+            <a href="{{ url_for("experiment.show", id=experiment.id) }}">{{experiment.name}}</a>
             <span class="nodeCount">{{ experiment.nodes.count() }} nodes</span>
         </li>
     {% else %}

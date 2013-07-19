@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 """ Initializes the database schema. """
 
-from server import db
+from server import app
+from database import db
 from models import *
 
-db.create_all()
+db.create_all(app=app)

@@ -10,7 +10,8 @@ class Node(db.Model):
     Represents a testbed node.
     """
 
-    Status = Enum("Status", "IDLE PREPARING READY RUNNING UPGRADING")
+    Status = Enum("Status", {"INIT": 0, "IDLE": 1, "PREPARING": 2, "READY": 3, 
+        "RUNNING": 4, "UPGRADING": 5})
 
     id = db.Column(db.Integer, primary_key=True)
     model = db.Column(db.Text)

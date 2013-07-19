@@ -19,7 +19,7 @@
             <strong>Current experiment:</strong>
             {% if node.activeExperiment %}
                 <a href="{{url_for("experiment.show", id=node.activeExperiment.id)}}">
-                    {{node.activeExperiment.name | safe}}
+                    {{node.activeExperiment.name}}
                 </a>
             {% else %}
                 None
@@ -32,7 +32,7 @@
                     {% if experiment != node.activeExperiment %}
                         <li>
                             <a href="{{url_for("experiment.show", id=experiment.id)}}">
-                                {{experiment.name | safe}}
+                                {{experiment.name}}
                             </a>
                         </li>
                     {% endif %}

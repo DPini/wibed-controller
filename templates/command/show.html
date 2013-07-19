@@ -6,7 +6,7 @@
     <ul class="resultList">
     {% for execution in executions %}
         <li>
-            Node: {{execution.node.id | safe}}<br /> 
+            Node: {{execution.node.id}}<br /> 
             Result: 
                 <ul>
                     <li>
@@ -14,11 +14,11 @@
                     </li>
                     <li>
                         <strong>Stdout:</strong><br />
-                        {{execution.stdout}}
+                        {{execution.stdout | nl2br}}
                     </li>
                     <li>
                         <strong>Stderr:</strong><br />
-                        {{execution.stderr}}
+                        {{execution.stderr | nl2br}}
                     </li>
                 </ul>
         </li>
@@ -31,7 +31,7 @@
     <ul class="pendingList">
     {% for node in pendingNodes %}
         <li>
-            Node: {{node.id | safe}}
+            Node: {{node.id}}
         </li>
     {% else %}
         <li><em>No pending executions at this time.</em></li>

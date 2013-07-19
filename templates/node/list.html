@@ -5,7 +5,7 @@
     <ul class="nodeList">
     {% for node in nodes %}
         <li>
-            <a href="{{ url_for("node.show", id=node.id) }}">{{node.id}}</a>
+            <a href="{{ url_for("node.show", id=node.id) }}">{{node.id}} ({{node.status.name | capitalize}})</a>
         </li>
     {% else %}
         <li><em>No nodes exist</em></li>

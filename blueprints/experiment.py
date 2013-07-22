@@ -21,9 +21,11 @@ def index():
 @bpExperiment.route("/list")
 def list():
     runningExperiments = Experiment.query.filter(\
-            Experiment.status != Experiment.Status.FINISHED).all()
+            Experiment.status != Experiment.Status.FINISHED).\
+            order_by(Experiment.id.desc()).all()
     finishedExperiments = Experiment.query.filter(\
-            Experiment.status == Experiment.Status.FINISHED).all()
+            Experiment.status == Experiment.Status.FINISHED).\
+            order_by(Experiment.id.desc()).all()
     return render_template("experiment/list.html", \
             runningExperiments=runningExperiments, \
             finishedExperiments=finishedExperiments)

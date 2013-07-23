@@ -2,6 +2,13 @@
 
 from database import db
 
+from models.experiment import Experiment
+
+commandTargets = db.Table('commandTargets',
+    db.Column('command_id', db.Integer, db.ForeignKey('command.id')),
+    db.Column('node_id', db.Integer, db.ForeignKey('node.id'))
+)
+
 class Command(db.Model):
     """
     Represents a command in a testbed experiment.
@@ -14,7 +21,18 @@ class Command(db.Model):
     experiment = db.relationship("Experiment", \
         backref=db.backref("commands", lazy="dynamic"))
 
-    def __init__(self, experimentId, command):
-        self.experimentId = experimentId
+    nodes = db.relationship("Node", secondary=commandTargets, \
+            backref=db.backref("commands", lazy="dynamic"), lazy="dynamic")
+
+    def __init__(self, command, experimentId=None, nodes=[]):
         self.command = command
+
+        if experimentId:
+            if len(nodes) == 0:
+                nodes = Experiment.query.get(experimentId).nodes.all()
+        elif len(nodes) == 0:
+            raise ValueError("Cannot add command with no target nodes")
+
+        self.experimentId = experimentId
+        self.nodes.extend(nodes)
 

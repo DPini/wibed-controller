@@ -6,6 +6,7 @@ from flask import request, render_template, flash, redirect, \
 
 from database import db
 from models.command import Command
+from models.node import Node
 
 bpCommand = Blueprint("command", __name__, template_folder="../templates")
 
@@ -15,8 +16,8 @@ def show(id):
     executions = command.executions.all();
     # Get all nodes except those associated with executions
     # of this command
-    pendingNodes = command.experiment.nodes.except_(\
-            command.experiment.nodes.join(\
+    pendingNodes = command.nodes.except_(\
+            command.nodes.join(\
             command.executions.subquery())).all()
     return render_template("command/show.html", command=command, \
             executions=executions, pendingNodes=pendingNodes)
@@ -24,13 +25,28 @@ def show(id):
 @bpCommand.route("/add", methods = ["POST"])
 def add():
     commandString = request.form["command"]
-    experimentId = request.form["experimentId"]
+    experimentId = None
+    nodes = []
+
     try:
-        command = Command(experimentId, commandString)
+        experimentId = request.form["experimentId"]
+    except KeyError:
+        pass
+
+    try:
+        nodes = Node.query.filter(Node.id.in_(request.form.getlist("nodeIds"))).all()
+    except KeyError:
+        pass
+
+    try:
+        command = Command(commandString, experimentId, nodes)
         db.session.add(command)
         db.session.commit()
         flash("Command '%s' added successfully" % commandString)
     except Exception as e:
         db.session.rollback()
-        flash("Error adding command '%s': %s" % (command, str(e))) 
-    return redirect(url_for("experiment.show", id=experimentId))
+        flash("Error adding command '%s': %s" % (commandString, str(e))) 
+    if experimentId:
+        return redirect(url_for("experiment.show", id=experimentId))
+    else:
+        return redirect(url_for("admin.index"))

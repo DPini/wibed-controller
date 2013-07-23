@@ -7,10 +7,13 @@
     <h1>Wibed Server</h1>
     <ul class="metanav">
         <li>
-            <a href="{{ url_for("experiment.list") }}">Experiments</a>
+            <a href="{{url_for("experiment.list")}}">Experiments</a>
         </li>
         <li>
-            <a href="{{ url_for("node.list") }}">Nodes</a>
+            <a href="{{url_for("node.list")}}">Nodes</a>
+        </li>
+        <li>
+            <a href="{{url_for("admin.index")}}">Admin</a>
         </li>
     </ul>
     {% for message in get_flashed_messages() %}

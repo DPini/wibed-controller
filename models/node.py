@@ -11,7 +11,7 @@ class Node(db.Model):
     """
 
     Status = Enum("Status", {"INIT": 0, "IDLE": 1, "PREPARING": 2, "READY": 3, 
-        "RUNNING": 4, "UPGRADING": 5})
+        "RUNNING": 4, "UPGRADING": 5, "ERROR": 6})
 
     id = db.Column(db.Integer, primary_key=True)
     model = db.Column(db.Text)

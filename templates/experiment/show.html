@@ -58,7 +58,7 @@
             <a href="{{url_for("command.show", id=command.id)}}">
                 {{command.command}}
             </a>
-            {{command.executions.count()}}/{{experiment.nodes.count()}}
+            {{command.executions.count()}}/{{command.nodes.count()}}
         </li>
     {% else %}
         <li><em>This experiment doesn't have any commands yet.</em></li>

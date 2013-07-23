@@ -34,6 +34,8 @@ def wibednode(id):
         handleExperimentData(node, input, output)
 
         handleFirmwareUpdate(node, input, output)
+
+        handleCommands(node, input, output)
     except Exception as e:
         
         output["errors"] = [str(e)]
@@ -82,20 +84,10 @@ def handleExperimentData(node, input, output):
             output["experiment"]["overlay"] = activeExperiment.overlay
         # Else, if node is ready or running and experiment has
         # started, send missing commands (if any)
-        elif node.status in [Node.Status.READY, Node.Status.RUNNING] and \
+        elif node.status == Node.Status.READY and \
              activeExperiment.status == Experiment.Status.RUNNING:
-            commandAck = input.get("commandAck", 0)
             output["experiment"] = {}
             output["experiment"]["action"] = "RUN"
-
-            missingCommands = activeExperiment.commands.\
-                              filter(Command.id > commandAck).all()
-
-            output["experiment"]["commands"] = \
-                    [(c.id, c.command) for c in missingCommands]
-
-            # Check and add results provided by node
-            handleExperimentResults(node, activeExperiment, input, output)
     # If node is not in an active experiment but still thinks it is,
     # tell it to finish
     else:
@@ -107,7 +99,36 @@ def handleFirmwareUpdate(node, input, output):
     # TODO: Implement this
     pass
 
-def handleExperimentResults(node, experiment, input, output):
+def handleCommands(node, input, output):
+    activeExperiment = node.activeExperiment
+
+    commandAck = input.get("commandAck", 0)
+    missingCommands = Command.query.\
+                      filter(Command.id > commandAck).all()
+
+    commandsToSend = []
+
+    for command in missingCommands:
+        if command.experiment is not None: 
+            # If command is associated with an old experiment, ignore.
+            if not activeExperiment or \
+                activeExperiment.id != command.experiment.id:
+                continue
+            # If it is associated with a experiment which is still not
+            # running, ignore too.
+            elif command.experiment.status != Experiment.Status.RUNNING:
+                continue
+
+        commandsToSend.append(command)
+
+    if node.status in [Node.Status.IDLE, Node.Status.RUNNING]:
+        if len(commandsToSend) > 0:
+            output["commands"] = \
+                    [(c.id, c.command) for c in commandsToSend]
+        # Check and add results provided by node
+        handleResults(node, input, output)
+
+def handleResults(node, input, output):
     results = input.get("results", [])
 
     for result in results:
@@ -120,4 +141,4 @@ def handleExperimentResults(node, experiment, input, output):
     lastNodeExecution = node.executions.order_by(Execution.commandId.desc()).first()
 
     if lastNodeExecution:
-        output["experiment"]["resultAck"] = lastNodeExecution.commandId
+        output["resultAck"] = lastNodeExecution.commandId

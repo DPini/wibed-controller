@@ -25,6 +25,9 @@ app.register_blueprint(bpCommand, url_prefix="/command")
 from blueprints.nodeapi import bpNodeAPI
 app.register_blueprint(bpNodeAPI, url_prefix="/api")
 
+from blueprints.admin import bpAdmin
+app.register_blueprint(bpAdmin, url_prefix="/admin")
+
 if not os.path.isdir(app.config["OVERLAY_DIR"]):
     os.makedirs(app.config["OVERLAY_DIR"])
 

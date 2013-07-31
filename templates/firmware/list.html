@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h1>Firmwares</h1>
+    <form action="{{ url_for("firmware.add") }}" method="post" class="firmwareAdd" enctype="multipart/form-data">
+        <fieldset>
+            <legend>Add Firmware</legend>
+            <ul>
+                <li>
+                    <label for="version">Version:</label>
+                    <input type="text" name="version" id="version" size="30" />
+                </li>
+                <li>
+                    <label for="firmware">Firmware:</label>
+                    <input type="file" name="firmware" id="firmware" />
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset class="buttons">
+            <input type="submit" class="submit" value="Add" />
+        </fieldset>
+    </form>
+    <h2>Installed Firmwares</h2>
+    <ul class="installedFirmwares">
+    {% for firmware in installedFirmwares %}
+        <li>
+            <a href="{{url_for("firmware.show", id=firmware.id)}}">{{firmware.version}}</a> 
+            <span class="nodeCount">{{firmware.nodes.count()}} nodes</span>
+        </li>
+    {% else %}
+        <li><em>No installed firmwares found</em></li>
+    {% endfor %}
+    </ul>
+
+    <h2>Other Firmwares</h2>
+    <ul class="otherFirmwares">
+    {% for firmware in otherFirmwares %}
+        <li>
+            <a href="{{ url_for("firmware.show", id=firmware.id) }}">{{firmware.version}}</a>
+        </li>
+    {% else %}
+        <li><em>No other firmwares found</em></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

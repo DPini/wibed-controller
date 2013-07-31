@@ -15,17 +15,21 @@ class Node(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     model = db.Column(db.Text)
-    version = db.Column(db.Text)
+    firmwareId = db.Column(db.Integer, db.ForeignKey("firmware.id"))
     status = db.Column(DatabaseEnum(Status, *[e.name for e in Status]))
     lastContact = db.Column(db.DateTime)
     experimentId = db.Column(db.Integer, db.ForeignKey("experiment.id"))
+    upgradeId = db.Column(db.Integer, db.ForeignKey("upgrade.id"))
 
     activeExperiment = db.relationship("Experiment")
+    activeUpgrade = db.relationship("Upgrade")
+    installedFirmware = db.relationship("Firmware", backref=db.backref("nodes", lazy="dynamic"))
 
     @hybrid_property
     def available(self):
         return (self.activeExperiment == None) & \
-               (self.status == self.Status.IDLE)
+               (self.status == self.Status.IDLE) & \
+               (self.activeUpgrade == None)
 
     def __init__(self, id):
         self.id = id

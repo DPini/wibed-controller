@@ -7,7 +7,12 @@
             <strong>Model:</strong> {{node.model}}
         </li>
         <li>
-            <strong>Version:</strong> {{node.version}}
+            <strong>Version:</strong> 
+            {% if node.installedFirmware %}
+                {{node.installedFirmware.version}}
+            {% else %}
+                Unknown
+            {% endif %}
         </li>
         <li>
             <strong>Last contact:</strong> {{node.lastContact}}

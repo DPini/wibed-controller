@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h1>Firmware '{{firmware.version}}'</h1>
+    <ul>
+        <li><a href="{{url_for("firmware.install", id=firmware.id)}}">Install</a></li>
+    </ul>
+    <ul>
+        <li>
+            <strong>Id:</strong> 
+            {{firmware.id}}
+        </li>
+        <li>
+            <strong>Hash:</strong>
+            {{firmware.hash}}
+        </li>
+    <h2>Nodes with firmware installed</h2>
+    <ul class="nodeList">
+    {% for node in firmware.nodes %}
+        <li>
+            <a href="{{url_for("node.show", id=node.id)}}">{{node.id}}</a>
+        </li>
+    {% else %}
+        <li><em>No nodes have this firmware installed.</em></li>
+    {% endfor %}
+    </ul>
+
+    <h2>Upgrade orders</h2>
+    <ul class="upgradeOrdersList">
+    {% for upgradeOrder in firmware.upgradeOrders %}
+        <li>
+            <strong>Upgrade time:</strong> {{upgradeOrder.upgradeTime}}
+            <ul>
+                {% for node in upgradeOrder.nodes %}
+                <li><a href="{{url_for("node.show", id=node.id)}}">{{node.id}}</a></li>
+                {% endfor %}
+        </li>
+    {% else %}
+        <li><em>This firmware hasn't been associated with any upgrade orders yet.</em></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

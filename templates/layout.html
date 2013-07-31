@@ -15,6 +15,9 @@
         <li>
             <a href="{{url_for("admin.index")}}">Admin</a>
         </li>
+        <li>
+            <a href="{{url_for("firmware.list")}}">Firmwares</a>
+        </li>
     </ul>
     {% for message in get_flashed_messages() %}
         <div class="flash">{{ message }}</div>

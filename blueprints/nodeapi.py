@@ -9,6 +9,7 @@ from models.node import Node
 from models.experiment import Experiment
 from models.command import Command
 from models.execution import Execution
+from models.firmware import Firmware
 
 bpNodeAPI = Blueprint("nodeAPI", __name__, template_folder="../templates")
 
@@ -33,7 +34,7 @@ def wibednode(id):
 
         handleExperimentData(node, input, output)
 
-        handleFirmwareUpdate(node, input, output)
+        handleFirmwareUpgrade(node, input, output)
 
         handleCommands(node, input, output)
     except Exception as e:
@@ -65,7 +66,14 @@ def updateNode(node, input):
     if "model" in input:
         node.model = input["model"]
     if "version" in input:
-        node.version = input["version"]
+        firmwareVersion = input["version"]
+        try:
+            firmware = Firmware.query.filter(Firmware.version == firmwareVersion).one()
+        except Exception:
+            firmware = Firmware(firmwareVersion)
+            db.session.add(firmware)
+
+        node.installedFirmware = firmware
 
     node.lastContact = datetime.now()
     node.status = input["status"]
@@ -95,9 +103,26 @@ def handleExperimentData(node, input, output):
             output["experiment"] = {}
             output["experiment"]["action"] = "FINISH"
 
-def handleFirmwareUpdate(node, input, output):
-    # TODO: Implement this
-    pass
+def handleFirmwareUpgrade(node, input, output):
+    # If node is not idle or init, nothing to do
+    if node.status not in [Node.Status.INIT, Node.Status.IDLE]:
+        return
+
+    activeUpgrade = node.activeUpgrade
+
+    # If node is involved in an active upgrade
+    if activeUpgrade is not None:
+
+        # If node finished firmware upgrade
+        if node.installedFirmware.version == activeUpgrade.firmware.version:
+            node.activeUpgrade = None
+            db.session.commit()
+        # Else if node still has to start the upgrade, send upgrade data
+        else:
+            output["upgrade"] = {}
+            output["upgrade"]["version"] = activeUpgrade.firmware.version
+            output["upgrade"]["utime"] = activeUpgrade.upgradeTime.timestamp()
+            output["upgrade"]["hash"] = activeUpgrade.firmware.hash
 
 def handleCommands(node, input, output):
     activeExperiment = node.activeExperiment

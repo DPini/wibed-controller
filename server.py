@@ -28,8 +28,16 @@ app.register_blueprint(bpNodeAPI, url_prefix="/api")
 from blueprints.admin import bpAdmin
 app.register_blueprint(bpAdmin, url_prefix="/admin")
 
-if not os.path.isdir(app.config["OVERLAY_DIR"]):
-    os.makedirs(app.config["OVERLAY_DIR"])
+from blueprints.firmware import bpFirmware
+app.register_blueprint(bpFirmware, url_prefix="/firmware")
+
+@app.before_first_request
+def initializeFolders():
+    if not os.path.isdir(app.config["OVERLAY_DIR"]):
+        os.makedirs(app.config["OVERLAY_DIR"])
+
+    if not os.path.isdir(app.config["FIRMWARE_DIR"]):
+        os.makedirs(app.config["FIRMWARE_DIR"])
 
 @app.route("/")
 def index():

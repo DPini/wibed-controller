@@ -149,19 +149,20 @@ def handleCommands(node, input, output):
     if node.status in [Node.Status.IDLE, Node.Status.RUNNING]:
         if len(commandsToSend) > 0:
             output["commands"] = \
-                    [(c.id, c.command) for c in commandsToSend]
+                    {c.id: c.command for c in commandsToSend}
         # Check and add results provided by node
         handleResults(node, input, output)
 
 def handleResults(node, input, output):
     results = input.get("results", [])
 
-    for result in results:
-        (commandId, exitCode, stdout, stderr) = result
-        execution = Execution(commandId, node.id, exitCode, stdout, stderr)
-        # Insert or Update if already exists
-        db.session.merge(execution)
-    db.session.commit()
+    if results:
+        for commandId, result in results.items():
+            (exitCode, stdout, stderr) = result
+            execution = Execution(commandId, node.id, exitCode, stdout, stderr)
+            # Insert or Update if already exists
+            db.session.merge(execution)
+        db.session.commit()
 
     lastNodeExecution = node.executions.order_by(Execution.commandId.desc()).first()
 

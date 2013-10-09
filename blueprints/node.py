@@ -27,7 +27,7 @@ def add():
         node = Node(id)
         db.session.add(node)
         db.session.commit()
-        flash("Node '%d' added successfully" % node.id)
+        flash("Node '%s' added successfully" % node.id)
         return redirect(url_for(".show", id=node.id))
 
 @bpNode.route("/remove/<id>")

@@ -13,7 +13,7 @@ class Node(db.Model):
     Status = Enum("Status", {"INIT": 0, "IDLE": 1, "PREPARING": 2, "READY": 3, 
         "RUNNING": 4, "UPGRADING": 5, "ERROR": 6})
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(64), primary_key=True)
     model = db.Column(db.Text)
     firmwareId = db.Column(db.Integer, db.ForeignKey("firmware.id"))
     status = db.Column(DatabaseEnum(Status, *[e.name for e in Status]))

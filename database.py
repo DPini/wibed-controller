@@ -18,7 +18,7 @@ class DatabaseEnum(types.TypeDecorator):
 
     def __init__(self, statusEnum, *args, **kwargs):
         self._statusEnum = statusEnum
-        super().__init__(self, *args, **kwargs)
+        super(DatabaseEnum, self).__init__(self, *args, **kwargs)
 
     def process_bind_param(self, value, dialect):
         if value is not None:

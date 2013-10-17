@@ -1,5 +1,6 @@
 *.pyc
 tags
-static
+static/firmwares
+static/overlays
 wibed.db
 *~

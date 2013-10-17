@@ -5,13 +5,15 @@
 <div class="row">
 <div class="well">
 <div class="btn-group">
-  {% if experiment.status != Experiment.Status.RUNNING %}
+  {% if experiment.status == Experiment.Status.PREPARING %}
     <a class="btn btn-success" href="{{url_for("experiment.start", id=experiment.id)}}">Start</a>
   {% endif %}
   {% if experiment.status != Experiment.Status.FINISHED %}
     <a class="btn btn-warning" href="{{url_for("experiment.finish", id=experiment.id)}}">Finish</a>
   {% endif %}
-  <a class="btn btn-danger" href="{{url_for("experiment.remove", id=experiment.id)}}">Remove</a>
+  {% if experiment.status == Experiment.Status.FINISHED %}
+    <a class="btn btn-danger" href="{{url_for("experiment.remove", id=experiment.id)}}">Remove</a>
+  {% endif %}
 </div>
 </div>
 </div>
@@ -43,9 +45,7 @@
     {% for node in nodes %}
     <li class="list-group-item">
       <a href="{{url_for("node.show", id=node.id)}}">{{node.id}}</a>
-      {% if experiment.status != Experiment.Status.FINISHED %}
       (<span>{{node.status.name | capitalize}}</span>)
-      {% endif %}
     </li>
     {% else %}
     <li class="list-group-item"><em>No nodes assigned to experiment.</em></li>

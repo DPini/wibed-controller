@@ -1,43 +1,42 @@
 {% extends "layout.html" %}
 {% block body %}
-    <form action="{{ url_for("command.add") }}" method="post" class="commandAdd">
+  <div class="well">
+    <form class="form-horizontal" action="{{ url_for("command.add") }}" method="post">
         <fieldset>
             <legend>Add Command</legend>
-            <ul>
-                <li>
-                    <label for="command">Command:</label>
-                    <input type="text" name="command" id="command" size="30" />
-                </li>
-                <li>
-                    Target Nodes:
-                    <ul class="nodeList">
-                        {% for node in nodes %}
-                            <li>
-                                <input type="checkbox" name="nodeIds" id="node_{{node.id}}" value="{{ node.id }}" />
-                                <label for="node_{{node.id}}">{{node.id}}</label>
-                            </li>
-                        {% else %}
-                            <li>No nodes available.</li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            </ul>
-        </fieldset>
-        <fieldset class="buttons">
-            <input type="submit" class="submit" value="Add" />
+            <div class="form-group">
+              <label for="command" class="col-sm-2 control-label">Command:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control input-sm" name="command" id="command" size="30" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Target Nodes:</label>
+              <div class="col-sm-10">
+                {% for node in nodes %}
+                <input type="checkbox" class="form-control" name="nodeIds" id="node_{{node.id}}" value="{{ node.id }}" />
+                <label for="node_{{node.id}}" class="control-label">{{node.id}}</label>
+                {% else %}
+                <p>No nodes available.</p>
+                {% endfor %}
+              </div>
+            </div>
+          <input class="btn btn-primary" type="submit" value="Add">
         </fieldset>
     </form>
+  </div>
 
-    <h2>Admin Commands</h2>
-    <ul class="commandList">
+  <h2>Admin Commands</h2>
+  <ul class="list-group">
     {% for command in commands %}
-        <li>
-            <a href="{{url_for("command.show", id=command.id)}}">
-                {{command.command}}
-            </a>
-            {{command.executions.count()}}/{{command.nodes.count()}}
-        </li>
+      <li class="list-group-item">
+        <a href="{{url_for("command.show", id=command.id)}}">
+          {{command.command}}
+        </a>
+        {{command.executions.count()}}/{{command.nodes.count()}}
+      </li>
     {% else %}
-        <li><em>No admin commands were issued yet.</em></li>
+      <li class="list-group-item"><em>No admin commands were issued yet.</em></li>
     {% endfor %}
 {% endblock %}

@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
 {% block body %}
-    <form action="{{ url_for("node.add") }}" method="post" class="nodeAdd">
+  <div class="well">
+    <form class="form-horizontal" action="{{ url_for("node.add") }}" method="post">
         <fieldset>
             <legend>Add Node</legend>
-            <ul>
-                <li>
-                    <label for="id">ID:</label>
-                    <input type="text" name="id" id="id" size="30" />
-                </li>
-            </ul>
-        </fieldset>
-        <fieldset class="buttons">
-            <input type="submit" class="submit" value="Add" />
+            <div class="form-group">
+              <label for="id" class="col-sm-2 control-label">ID:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control input-sm" name="id" id="id" size="30" />
+              </div>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Add" />
         </fieldset>
     </form>
+  </div>
 {% endblock %}

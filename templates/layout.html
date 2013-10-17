@@ -1,28 +1,55 @@
 <!doctype html>
+<html>
 <head>
-    <title>Wibed Server</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="style.css") }}">
+  <title>Wibed Server</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="css/bootstrap.min.css") }}"  media="screen">
+  <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="css/bootstrap-theme.min.css") }}"  media="screen">
+  <style>
+    body {
+      padding-top: 20px;
+    }
+    .main {
+      padding: 40px 15px;
+    }
+  </style>
+
 </head>
 <body>
-    <h1>Wibed Server</h1>
-    <ul class="metanav">
-        <li>
-            <a href="{{url_for("experiment.list")}}">Experiments</a>
-        </li>
-        <li>
-            <a href="{{url_for("node.list")}}">Nodes</a>
-        </li>
-        <li>
-            <a href="{{url_for("admin.index")}}">Admin</a>
-        </li>
-        <li>
-            <a href="{{url_for("firmware.list")}}">Firmwares</a>
-        </li>
-    </ul>
-    {% for message in get_flashed_messages() %}
-        <div class="flash">{{ message }}</div>
-    {% endfor %}
-    <div class="body">
-    {% block body %}{% endblock %}
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">Wibed Server</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="{{url_for("experiment.list")}}">Experiments</a></li>
+          <li><a href="{{url_for("node.list")}}">Nodes</a></li>
+          <li><a href="{{url_for("admin.index")}}">Admin</a></li>
+          <li><a href="{{url_for("firmware.list")}}">Firmwares</a></li>
+        </ul>
+      </div>
     </div>
+  </div>
+
+  <div class="container">
+    <div class="main">
+      <div class="row">
+        {% for message in get_flashed_messages() %}
+          <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% block body %}{% endblock %}
+    </div>
+
+  </div>
+
+  <script src="{{ url_for("static", filename="js/jquery-1.10.2.min.js") }}"></script>
+  <script src="{{ url_for("static", filename="js/bootstrap.min.js") }}"></script>
 </body>
+</html>

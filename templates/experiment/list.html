@@ -1,29 +1,29 @@
 {% extends "layout.html" %}
 {% block body %}
-    <h1>Experiments</h1>
-    <a href="{{ url_for("experiment.add") }}">Add Experiment</a>
-    <h2>Running experiments</h2>
-    <ul class="runningExperimentList">
+    <h2>Experiments</h2>
+    <a class="btn btn-default" href="{{ url_for("experiment.add") }}">Add Experiment</a>
+    <h3>Running experiments</h3>
+    <ul class="list-group">
     {% for experiment in runningExperiments %}
-        <li>
+        <li class="list-group-item">
             <a href="{{ url_for("experiment.show", id=experiment.id) }}">{{experiment.name}}</a> -
             {{ experiment.status.name | capitalize }} - 
-            <span class="nodeCount">{{ experiment.nodes.count() }} nodes</span>
+            <span>{{ experiment.nodes.count() }} nodes</span>
         </li>
     {% else %}
-        <li><em>No experiments found</em></li>
+        <li class="list-group-item"><em>No experiments found</em></li>
     {% endfor %}
     </ul>
 
-    <h2>Finished experiments</h2>
-    <ul class="finishedExperimentList">
+    <h3>Finished experiments</h3>
+    <ul class="list-group">
     {% for experiment in finishedExperiments %}
-        <li>
+        <li class="list-group-item">
             <a href="{{ url_for("experiment.show", id=experiment.id) }}">{{experiment.name}}</a>
-            <span class="nodeCount">{{ experiment.nodes.count() }} nodes</span>
+            <span>{{ experiment.nodes.count() }} nodes</span>
         </li>
     {% else %}
-        <li><em>No experiments found</em></li>
+        <li class="list-group-item"><em>No experiments found</em></li>
     {% endfor %}
     </ul>
 {% endblock %}

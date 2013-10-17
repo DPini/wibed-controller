@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
-    <h1>Nodes</h1>
-    <a href="{{ url_for("node.add") }}">Add Node</a>
-    <ul class="nodeList">
+    <h2>Nodes</h2>
+    <a class="btn btn-default" href="{{ url_for("node.add") }}">Add Node</a>
+    <h3>Registered nodes</h3>
+    <ul class="list-group">
     {% for node in nodes %}
-        <li>
+        <li class="list-group-item">
             <a href="{{ url_for("node.show", id=node.id) }}">{{node.id}} ({{node.status.name | capitalize}})</a>
         </li>
     {% else %}

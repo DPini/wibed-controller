@@ -1,86 +1,88 @@
 {% extends "layout.html" %}
 {% block body %}
-    <h1>Experiment '{{experiment.name}}'</h1>
-    <ul>
-        {% if experiment.status != Experiment.Status.RUNNING %}
-            <li>
-                <a href="{{url_for("experiment.start", id=experiment.id)}}">Start</a>
-            </li>
-        {% endif %}
-        {% if experiment.status != Experiment.Status.FINISHED %}
-            <li>
-                <a href="{{url_for("experiment.finish", id=experiment.id)}}">Finish</a>
-            </li>
-        {% endif %}
-        <li>
-            <a href="{{url_for("experiment.remove", id=experiment.id)}}">Remove</a>
-        </li>
-    </ul>
-    <ul>
-        <li>
-            <strong>Status:</strong> 
-            {{experiment.status.name | capitalize}}
-        </li>
-        <li>
-            <strong>Overlay:</strong>
-            {{experiment.overlay}}
-        </li>
-        <li>
-            <strong>Creation time:</strong>
-            {{experiment.creationTime}}
-        </li>
-        <li>
-            <strong>Start time:</strong>
-            {{experiment.startTime}}
-        </li>
-        <li>
-            <strong>Finish time:</strong>
-            {{experiment.finishTime}}
-        </li>
-    <h2>Nodes</h2>
-    <ul class="nodeList">
-    {% for node in nodes %}
-        <li>
-            <a href="{{url_for("node.show", id=node.id)}}">{{node.id}}</a>
-            {% if experiment.status != Experiment.Status.FINISHED %}
-            (<span class="nodeStatus">{{node.status.name | capitalize}}</span>)
-            {% endif %}
-        </li>
-    {% else %}
-        <li><em>No nodes assigned to experiment.</em></li>
-    {% endfor %}
-    </ul>
+<h2>Experiment '{{experiment.name}}'</h2>
 
-    <h2>Commands</h2>
-    <ul class="commandList">
-    {% for command in commands %}
-        <li>
-            <a href="{{url_for("command.show", id=command.id)}}">
-                {{command.command}}
-            </a>
-            {{command.executions.count()}}/{{command.nodes.count()}}
-        </li>
+<div class="row">
+<div class="well">
+<div class="btn-group">
+  {% if experiment.status != Experiment.Status.RUNNING %}
+    <a class="btn btn-success" href="{{url_for("experiment.start", id=experiment.id)}}">Start</a>
+  {% endif %}
+  {% if experiment.status != Experiment.Status.FINISHED %}
+    <a class="btn btn-warning" href="{{url_for("experiment.finish", id=experiment.id)}}">Finish</a>
+  {% endif %}
+  <a class="btn btn-danger" href="{{url_for("experiment.remove", id=experiment.id)}}">Remove</a>
+</div>
+</div>
+</div>
+
+<ul>
+  <li>
+    <strong>Status:</strong> 
+    {{experiment.status.name | capitalize}}
+  </li>
+  <li>
+    <strong>Overlay:</strong>
+    {{experiment.overlay}}
+  </li>
+  <li>
+    <strong>Creation time:</strong>
+    {{experiment.creationTime}}
+  </li>
+  <li>
+    <strong>Start time:</strong>
+    {{experiment.startTime}}
+  </li>
+  <li>
+    <strong>Finish time:</strong>
+    {{experiment.finishTime}}
+  </li>
+  
+  <h2>Nodes</h2>
+  <ul class="list-group">
+    {% for node in nodes %}
+    <li class="list-group-item">
+      <a href="{{url_for("node.show", id=node.id)}}">{{node.id}}</a>
+      {% if experiment.status != Experiment.Status.FINISHED %}
+      (<span>{{node.status.name | capitalize}}</span>)
+      {% endif %}
+    </li>
     {% else %}
-        <li><em>This experiment doesn't have any commands yet.</em></li>
+    <li class="list-group-item"><em>No nodes assigned to experiment.</em></li>
     {% endfor %}
+  </ul>
+
+  <h2>Commands</h2>
+  <ul class="list-group">
+    {% for command in commands %}
+    <li class="list-group-item">
+      <a href="{{url_for("command.show", id=command.id)}}">
+        {{command.command}}
+      </a>
+      {{command.executions.count()}}/{{command.nodes.count()}}
+    </li>
+    {% else %}
+    <li class="list-group-item"><em>This experiment doesn't have any commands yet.</em></li>
+    {% endfor %}
+  </ul>
+
+  {% if experiment.status != Experiment.Status.FINISHED %}
+  <div class="well">
+    <form class="form-horizontal" action="{{ url_for("command.add") }}" method="post">
+      <fieldset>
+        <legend>Add command</legend>
+        <div class="form-group">
+          <label for="command" class="col-sm-2 control-label">Command:</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control input-sm" name="command" id="command" size="30" />
+          </div>
+        </div>
+        <input type="hidden" name="experimentId" value="{{experiment.id}}" />
+          <input class="btn btn-primary" type="submit" value="Add">
+      </fieldset>
+    </form>
+  </div>
+  {% endif %}
 </ul>
 
-
-    {% if experiment.status != Experiment.Status.FINISHED %}
-    <form action="{{ url_for("command.add") }}" method="post" class="commandAdd">
-        <fieldset>
-            <legend>Add Command</legend>
-            <ul>
-                <li>
-                    <label for="command">Command:</label>
-                    <input type="text" name="command" id="command" size="30" />
-                </li>
-            </ul>
-            <input type="hidden" name="experimentId" value="{{experiment.id}}" />
-        </fieldset>
-        <fieldset class="buttons">
-            <input type="submit" class="submit" value="Add" />
-        </fieldset>
-    </form>
-    {% endif %}
 {% endblock %}

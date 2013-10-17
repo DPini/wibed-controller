@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
-    <form action="{{url_for("firmware.install", id=firmware.id)}}" method="post" class="firmwareInstall">
+    <form action="{{url_for("firmware.install", id=firmware.id)}}" method="post">
         <fieldset>
             <legend>Install firmware {{firmware.version}}</legend>
             <ul>
@@ -10,7 +10,7 @@
                 </li>
                 <li>
                     Nodes:
-                    <ul class="nodeList">
+                    <ul>
                         {% for node in availableNodes %}
                             <li>
                                 <input type="checkbox" name="nodeIds" id="node_{{node.id}}" value="{{ node.id }}" />
@@ -23,8 +23,8 @@
                 </li>
             </ul>
         </fieldset>
-        <fieldset class="buttons">
-            <input type="submit" class="submit" value="Install" />
+        <fieldset>
+            <input type="submit" class="btn btn-lg btn-primary" value="Install" />
         </fieldset>
     </form>
 {% endblock %}

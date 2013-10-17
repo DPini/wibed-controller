@@ -1,47 +1,40 @@
 {% extends "layout.html" %}
 {% block body %}
-    <form action="{{ url_for("experiment.add") }}" method="post" class="experimentAdd" enctype="multipart/form-data">
+  <div class="well">
+    <form class="form-horizontal" action="{{ url_for("experiment.add") }}" method="post" enctype="multipart/form-data">
         <fieldset>
             <legend>Add Experiment</legend>
-            <ul>
-                <li>
-                    <label for="name">Name:</label>
-                    <input type="text" name="name" id="name" size="30" />
-                </li>
-                <li>
-                    Overlay:
-                    <ul class="overlayList">
-                        <li>
-                            <input type="radio" name="overlay" id="overlay_new" value="NEW" />
-                            <label for="overlay_new">New</label>
-                            <br />
-                            <input type="file" name="overlay_file" id="overlay_file" />
-                        </li>
-                        {% for idx, overlay in overlays %}
-                            <li>
-                                <input type="radio" name="overlay" id="overlay_{{idx}}" value="{{overlay}}" /> 
-                                <label for="node_{{idx}}">{{overlay}}</label>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </li>
-                <li>
-                    Nodes:
-                    <ul class="nodeList">
-                        {% for node in freeNodes %}
-                            <li>
-                                <input type="checkbox" name="nodeIds" id="node_{{node.id}}" value="{{ node.id }}" />
-                                <label for="node_{{node.id}}">{{node.id}}</label>
-                            </li>
-                        {% else %}
-                            <li>No nodes available.</li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            </ul>
-        </fieldset>
-        <fieldset class="buttons">
-            <input type="submit" class="submit" value="Add" />
+            <div class="form-group">
+              <label for="name" class="col-sm-2 control-label">Name:</label>
+              <div class="col-sm-10">
+                <input type="text" name="name" id="name" size="30" class="form-control input-sm"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Overlay:</label>
+              <div class="col-sm-10">
+                <input type="radio" name="overlay" id="overlay_new" value="NEW" />
+                <label for="overlay_new">New</label>
+                <input type="file" name="overlay_file" id="overlay_file" />
+                {% for idx, overlay in overlays %}
+                  <input type="radio" name="overlay" id="overlay_{{idx}}" value="{{overlay}}" /> 
+                  <label for="node_{{idx}}">{{overlay}}</label>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Nodes:</label>
+              <div class="col-sm-10">
+                {% for node in freeNodes %}
+                  <input type="checkbox" name="nodeIds" id="node_{{node.id}}" value="{{ node.id }}" />
+                  <label for="node_{{node.id}}">{{node.id}}</label>
+                {% else %}
+                  No nodes available.
+                {% endfor %}
+              </div>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Add" />
         </fieldset>
     </form>
+  </div>
 {% endblock %}

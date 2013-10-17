@@ -1,8 +1,10 @@
 {% extends "layout.html" %}
 {% block body %}
-    <h1>Node '{{node.id}}'</h1>
-    <a href="{{url_for("node.remove", id=node.id)}}">Remove</a>
-    <ul class="nodeProperties">
+    <h2>Node '{{node.id}}'</h2>
+    <div class="well">
+      <a class="btn btn-danger" href="{{url_for("node.remove", id=node.id)}}">Remove</a>
+    </div>
+    <ul>
         <li>
             <strong>Model:</strong> {{node.model}}
         </li>

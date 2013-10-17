@@ -2,12 +2,12 @@
 {% block body %}
     <h1>Command '{{command.command}}'</h1>
     {% if command.experiment %}
-        in experiment <a href="{{url_for("experiment.show", id=command.experiment.id)}}">'{{command.experiment.name}}'</a>
+        in experiment <a href="{{url_for("experiment.show", id=command.experiment.id)}}">{{command.experiment.name}}</a>
     {% endif %}
     <h2>Results</h2>
-    <ul class="resultList">
+    <ul class="list-group">
     {% for execution in executions %}
-        <li>
+        <li class="list-group-item">
             Node: {{execution.node.id}}<br /> 
             Result: 
                 <ul>
@@ -25,18 +25,18 @@
                 </ul>
         </li>
     {% else %}
-        <li><em>No results available at this time.</em></li>
+        <li class="list-group-item"><em>No results available at this time.</em></li>
     {% endfor %}
     </ul>
 
     <h2>Pending executions</h2>
-    <ul class="pendingList">
+    <ul class="list-group">
     {% for node in pendingNodes %}
-        <li>
+        <li class="list-group-item">
             Node: {{node.id}}
         </li>
     {% else %}
-        <li><em>No pending executions at this time.</em></li>
+        <li class="list-group-item"><em>No pending executions at this time.</em></li>
     {% endfor %}
     </ul>
 {% endblock %}

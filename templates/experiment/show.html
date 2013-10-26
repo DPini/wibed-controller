@@ -42,7 +42,7 @@
     {% for node in nodes %}
     <li class="list-group-item">
       <a href="{{url_for("node.show", id=node.id)}}">{{node.id}}</a>
-      (<span>{{node.status.name | capitalize}}</span>)
+      (<span><span {% if not node.reachable %}class="unreachable"{% endif%}>{{node.status.name | capitalize}}</span> - {{node.lastSeenStr}} secs. ago</span>)
     </li>
     {% else %}
     <li class="list-group-item"><em>No nodes assigned to experiment.</em></li>

@@ -20,7 +20,7 @@
             <strong>Last contact:</strong> {{node.lastContact}}
         </li>
         <li>
-            <strong>Status:</strong> {{node.status.name | capitalize}}
+            <strong>Status:</strong> <span {% if not node.reachable %}class="unreachable"{% endif%}>{{node.status.name | capitalize}}</span> - {{node.lastSeenStr}} secs. ago
         </li>
         <li>
             <strong>Current experiment:</strong>

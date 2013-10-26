@@ -37,6 +37,7 @@ def wibednode(id):
         handleFirmwareUpgrade(node, input, output)
 
         handleCommands(node, input, output)
+
     except Exception as e:
         
         output["errors"] = [str(e)]
@@ -60,7 +61,6 @@ def validateInput(input):
 
         if not "version" in input:
             raise Exception("No firmware version information provided.")
-
 
 def updateNode(node, input):
     if "model" in input:

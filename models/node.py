@@ -2,6 +2,8 @@
 
 from sqlalchemy.ext.hybrid import hybrid_property
 from enum import Enum
+from datetime import datetime
+from flask import current_app
 
 from database import db, DatabaseEnum
 
@@ -30,6 +32,26 @@ class Node(db.Model):
         return (self.activeExperiment == None) & \
                (self.status == self.Status.IDLE) & \
                (self.activeUpgrade == None)
+
+
+    @property
+    def lastSeen(self):
+        if self.lastContact:
+            return (datetime.now() - self.lastContact).seconds
+
+    @property
+    def reachable(self):
+        if self.lastSeen != None:
+            return self.lastSeen < current_app.config['REACHABLE_WINDOW']
+        else:
+            return False
+
+    @property
+    def lastSeenStr(self):
+        if self.lastSeen:
+            return str(self.lastSeen)
+        else:
+            return ""
 
     def __init__(self, id):
         self.id = id

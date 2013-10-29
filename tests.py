@@ -71,7 +71,7 @@ class NodeModelTest(WibedTest):
         node = Node.query.get(node_id)
         self.assertEquals(node.reachable, True)
         response = self.post_node(node_id, IDLE)
-        sleep(1) # the REACHABLE_WINDOW equals 1 in TestingConfig
+        sleep(1) # the REACHABLE_WINDOW is set to 1 in TestingConfig
         self.assertEquals(node.reachable, False)
 
 class NodeListViewTest(WibedTest):

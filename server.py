@@ -26,6 +26,12 @@ def create_app(config_object="settings.DevelopmentConfig"):
     from blueprints.nodeapi import bpNodeAPI
     app.register_blueprint(bpNodeAPI, url_prefix="/api")
 
+    from blueprints.commandapi import bpCommandAPI
+    app.register_blueprint(bpCommandAPI, url_prefix="/api")
+
+    from blueprints.experimentapi import bpExperimentAPI
+    app.register_blueprint(bpExperimentAPI, url_prefix="/api")
+
     from blueprints.admin import bpAdmin
     app.register_blueprint(bpAdmin, url_prefix="/admin")
 

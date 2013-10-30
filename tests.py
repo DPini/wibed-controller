@@ -18,7 +18,7 @@ from models.firmware import Firmware
 INIT, IDLE, PREPARING, READY, RUNNING, UPGRADING, ERROR = 0, 1, 2, 3, 4, 5, 6
 
 class WibedTest(TestCase):
-
+    maxDiff = None
     def create_app(self):
         return create_app("settings.TestingConfig")
 
@@ -44,7 +44,35 @@ class WibedTest(TestCase):
         db.session.commit()
         return node
 
-class ApiTest(WibedTest):
+    def create_experiment(self, name="anexperiment", nodes=[], overlay=""):
+        if not nodes:
+            nodes = [self.create_node()]
+        experiment = Experiment(
+            name=name,
+            overlay=overlay,
+            nodes=nodes
+            )
+        db.session.add(experiment)
+        db.session.commit()
+        return experiment
+
+    def create_command(self, command_line="echo OK", experimentId=None, nodes=[]):
+        if not experimentId:
+            experiment = self.create_experiment(nodes=nodes)
+            experimentId = experiment.id
+        command = Command(command_line, experimentId)
+        db.session.add(command)
+        db.session.commit()
+        return command
+
+    def fake_exec(self, commandId, node=None, exitCode=0, stdout="OK", stderr=""):
+        if not node:
+            node = Node.query.one()
+        execution = Execution(commandId, node.id, 0, stdout, stderr)
+        db.session.add(execution)
+        db.session.commit()
+
+class NodeApiTest(WibedTest):
 
     def test_node_creation(self):
         node_id = "mynode"
@@ -62,6 +90,61 @@ class ApiTest(WibedTest):
         response = self.post_node(node_id, IDLE)
         node = Node.query.get(node_id)
         self.assertEquals(node.status, Node.Status.IDLE)
+
+class CommandApiTest(WibedTest):
+
+    def test_command_output(self):
+        command = self.create_command()
+        self.fake_exec(command.id)
+        with self.app.test_client() as c:
+            response = c.get("/api/commandOutput/" + str(command.id))
+            self.assertEquals(response.json,
+                {"commandId": 1,
+                 "command": "echo OK",
+                 "executions":
+                     [{"node": 'anode',
+                      "result":
+                          {"exitCode": 0,
+                           "stdout": 'OK',
+                           "stderr": ''
+                          }
+                      }]
+                })
+
+class ExperimentApiTest(WibedTest):
+
+    def test_experiment_info(self):
+        node = self.create_node()
+        experiment = self.create_experiment(nodes=[node])
+        command = self.create_command(experimentId=experiment.id)
+        with self.app.test_client() as c:
+            response = c.get("/api/experimentInfo/" + str(experiment.id))
+            self.assertEquals(response.json,
+                              { str(experiment.id): {'nodes':[node.id],
+                                                 'commands': [command.id]}})
+    def test_experiment_output(self):
+        node = self.create_node()
+        experiment = self.create_experiment(nodes=[node])
+        command = self.create_command(experimentId=experiment.id)
+        self.fake_exec(command.id)
+        with self.app.test_client() as c:
+            response = c.get("/api/experimentOutput/" + str(experiment.id))
+            self.assertEquals(response.json,
+                {"experimentId": experiment.id,
+                 "experiment": experiment.name,
+                 "commands": [{
+                    "commandId": 1,
+                     "command": "echo OK",
+                     "executions":
+                         [{"node": 'anode',
+                          "result":
+                              {"exitCode": 0,
+                               "stdout": 'OK',
+                               "stderr": ''
+                              }
+                          }]
+                 }]
+                })
 
 class NodeModelTest(WibedTest):
 
@@ -95,11 +178,7 @@ class ExperimentShowViewTest(WibedTest):
     def test_experiment_show(self):
         with self.app.test_client() as c:
             node = self.create_node()
-            experiment = Experiment(
-                name="myexperiment",
-                overlay="",
-                nodes=[node]
-                )
+            experiment = self.create_experiment("myexperiment", [node])
             db.session.add(experiment)
             db.session.commit()
             response = c.get("/experiment/show/1")

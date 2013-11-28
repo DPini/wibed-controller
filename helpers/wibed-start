@@ -1,0 +1,6 @@
+#!/bin/bash
+source /opt/wibed_env/bin/activate
+rm -rf /opt/wibed-controller/wibed.db*
+python /opt/wibed-controller/initdb.py
+python /opt/wibed-controller/tornadoserver.py
+

@@ -128,8 +128,15 @@ def handleCommands(node, input, output):
     activeExperiment = node.activeExperiment
 
     commandAck = input.get("commandAck", 0)
-    missingCommands = Command.query.\
-                      filter(Command.id > commandAck).all()
+    missingCommands = (
+                db.session.query(Command)
+                .join(Command.nodes)     # It's  necessary to join the "children" of
+                                         #Command
+                .filter(Command.id > commandAck)
+                # here comes the magic:  
+                # you can filter with Node even though it was not directly joined
+                .filter(Node.id == node.id) 
+        )
 
     commandsToSend = []
 

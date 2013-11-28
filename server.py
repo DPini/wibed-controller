@@ -2,7 +2,7 @@
 
 import os
 
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, url_for, render_template, request, flash
 
 def create_app(config_object="settings.DevelopmentConfig"):
     app = Flask(__name__)
@@ -48,7 +48,19 @@ def create_app(config_object="settings.DevelopmentConfig"):
 
     @app.route("/")
     def index():
-        return redirect(url_for("experiment.list"))
+            return redirect(url_for("login"))
+
+    @app.route('/login', methods=['GET', 'POST'])
+    def login():
+	     error = None
+	     if request.method == 'POST':
+		     if request.form['username'] != 'wibed' or \
+				     request.form['password'] != 'wibed':
+			 error = 'Invalid credentials'
+		     else:
+			 flash('You were successfully logged in')
+			 return redirect(url_for("experiment.list"))
+	     return render_template('login.html', error=error)
 
     return app
 

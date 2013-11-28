@@ -6,6 +6,7 @@ from flask import request, render_template, flash, redirect, \
 
 from database import db
 from models.node import Node
+from models.execution import Execution
 
 bpNode = Blueprint("node", __name__, template_folder="../templates")
 
@@ -33,6 +34,7 @@ def add():
 @bpNode.route("/remove/<id>")
 def remove(id):
     node = Node.query.get_or_404(id)
+    Execution.query.filter_by(nodeId = id).delete()
     db.session.delete(node)
     db.session.commit()
     return redirect(url_for(".list"))

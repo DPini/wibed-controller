@@ -1,5 +1,7 @@
 """ Wibed node-api functionality. """
 
+import logging
+
 from datetime import datetime
 
 from flask import Blueprint, request, jsonify, json
@@ -15,7 +17,9 @@ bpNodeAPI = Blueprint("nodeAPI", __name__, template_folder="../templates")
 
 @bpNodeAPI.route("/wibednode/<id>", methods=["POST"])
 def wibednode(id):
+    logging.debug('Node request from node with id %s', id)
     output = {}
+    logging.debug('NODE REQUEST: %s', request.get_json(force=True))
 
     try:
         input = json.loads(request.data)
@@ -39,10 +43,11 @@ def wibednode(id):
         handleCommands(node, input, output)
 
     except Exception as e:
-        
+        logging.debug('Exception joining node: %s', e)
         output["errors"] = [str(e)]
         db.session.rollback()
 
+    logging.debug('SERVER REPLY: %s', output)
     return jsonify(**output)
 
 def validateInput(input):
@@ -126,6 +131,7 @@ def handleFirmwareUpgrade(node, input, output):
 
 def handleCommands(node, input, output):
     activeExperiment = node.activeExperiment
+    logging.debug('Active experiment? %s', activeExperiment)
 
     commandAck = input.get("commandAck", 0)
     missingCommands = (

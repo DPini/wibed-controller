@@ -1,19 +1,31 @@
 #! /usr/bin/env python
 
 import os
+import logging
 
 from flask import Flask, redirect, url_for, render_template, request, flash
 
 def create_app(config_object="settings.DevelopmentConfig"):
+    #Creat Flask app
     app = Flask(__name__)
     app.config.from_object(config_object)
 
+    #Define log level
+    logLevel= logging.DEBUG if app.debug else logging.INFO
+    logging.basicConfig(level = logLevel)
+    logging.info('Started')
+    logging.debug('Debug mode enabled')
+
+
+    #Import initalized db
     from database import db
     db.init_app(app)
 
+    #Load filters
     from filters.nl2br import nl2br
     app.jinja_env.filters['nl2br'] = nl2br
 
+    #Load blueprints
     from blueprints.experiment import bpExperiment
     app.register_blueprint(bpExperiment, url_prefix="/experiment")
 
@@ -38,6 +50,8 @@ def create_app(config_object="settings.DevelopmentConfig"):
     from blueprints.firmware import bpFirmware
     app.register_blueprint(bpFirmware, url_prefix="/firmware")
 
+
+    #Initiliaze App
     @app.before_first_request
     def initializeFolders():
         if not os.path.isdir(app.config["OVERLAY_DIR"]):
@@ -46,10 +60,12 @@ def create_app(config_object="settings.DevelopmentConfig"):
         if not os.path.isdir(app.config["FIRMWARE_DIR"]):
             os.makedirs(app.config["FIRMWARE_DIR"])
 
+    #Default route
     @app.route("/")
     def index():
             return redirect(url_for("login"))
 
+    #Login page
     @app.route('/login', methods=['GET', 'POST'])
     def login():
 	     error = None
@@ -64,7 +80,7 @@ def create_app(config_object="settings.DevelopmentConfig"):
 
     return app
 
-
+#In case of an external WSGI container this is not called
 if __name__ == "__main__":
     app = create_app()
     app.run(host="0.0.0.0")

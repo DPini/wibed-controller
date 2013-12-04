@@ -15,7 +15,7 @@ def sig_handler(sig, frame):
 def startTornado():
     global http_server
     http_server = HTTPServer(WSGIContainer(create_app("settings.DevelopmentConfig")))
-    http_server.listen(5000)
+    http_server.listen(80)
     ioloop = IOLoop.instance()
     autoreload.start(ioloop)
     ioloop.start()

@@ -2,6 +2,9 @@
 
 import os
 
+import logging
+
+
 from flask import Blueprint
 from flask import request, render_template, flash, redirect, \
                   url_for, current_app as app
@@ -10,6 +13,8 @@ from werkzeug import secure_filename
 from database import db
 from models.experiment import Experiment
 from models.node import Node
+from models.command import Command
+from models.execution import Execution
 
 bpExperiment = Blueprint("experiment", __name__, \
         template_folder="../templates")
@@ -86,6 +91,11 @@ def add():
 @bpExperiment.route("/remove/<id>")
 def remove(id):
     experiment = Experiment.query.get_or_404(id)
+    # Delete the associatied commands and executions
+    for command in experiment.commands.all() :
+	    for execution in command.executions.all():
+		    db.session.delete(execution)
+	    db.session.delete(command)
     db.session.delete(experiment)
     db.session.commit()
     return redirect(url_for(".list"))

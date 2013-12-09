@@ -101,10 +101,12 @@ def handleExperimentData(node, input, output):
              activeExperiment.status == Experiment.Status.RUNNING:
             output["experiment"] = {}
             output["experiment"]["action"] = "RUN"
+	elif node.status == Node.Status.DEPLOYING or node.status == Node.Status.RESETTING:
+	    output["experiment"] = {}
     # If node is not in an active experiment but still thinks it is,
     # tell it to finish
     else:
-        if node.status in [Node.Status.PREPARING, Node.Status.READY, Node.Status.RUNNING]:
+        if node.status in [Node.Status.PREPARING, Node.Status.READY, Node.Status.DEPLOYING, Node.Status.RUNNING]:
             output["experiment"] = {}
             output["experiment"]["action"] = "FINISH"
 

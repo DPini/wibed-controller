@@ -13,7 +13,7 @@ class Node(db.Model):
     """
 
     Status = Enum("Status", {"INIT": 0, "IDLE": 1, "PREPARING": 2, "READY": 3, 
-        "RUNNING": 4, "UPGRADING": 5, "ERROR": 6})
+	    "DEPLOYING":4, "RUNNING": 5, "RESETTING": 6,  "UPGRADING": 7, "ERROR": 8})
 
     id = db.Column(db.String(64), primary_key=True)
     model = db.Column(db.Text)

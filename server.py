@@ -5,10 +5,18 @@ import logging
 
 from flask import Flask, redirect, url_for, render_template, request, flash
 
+# Enable for degubbing purposes
+# Needs flask_debugtoolbar installed
+#from flask_debugtoolbar import DebugToolbarExtension
+
 def create_app(config_object="settings.DevelopmentConfig"):
     #Creat Flask app
     app = Flask(__name__)
     app.config.from_object(config_object)
+
+    # Enable for degubbing purposes
+    # Needs flask_debugtoolbar installed
+    #toolbar = DebugToolbarExtension(app)
 
     #Define log level
     logLevel= logging.DEBUG if app.debug else logging.INFO
@@ -50,6 +58,10 @@ def create_app(config_object="settings.DevelopmentConfig"):
     from blueprints.firmware import bpFirmware
     app.register_blueprint(bpFirmware, url_prefix="/firmware")
 
+    #DB debug page
+    if app.debug :
+	    from blueprints.dbdebug import bpDb
+	    app.register_blueprint(bpDb, url_prefix="/dbdebug")
 
     #Initiliaze App
     @app.before_first_request

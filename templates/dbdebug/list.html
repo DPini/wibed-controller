@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h3>Registered nodes</h3>
+    <ul class="list-group">
+    {% for node in nodes %}
+        <li class="list-group-item">
+               {{node.id}} (<span {% if not node.reachable %}class="unreachable"{% endif%}>{{node.status.name | capitalize}}</span> - {{node.lastSeenStr}} secs. ago)
+        </li>
+    {% else %}
+        <li><em>No nodes exist</em></li>
+    {% endfor %}
+    </ul>
+    <h3>Registered Experiments</h3>
+    <ul class="list-group">
+    {% for exp in experiments %}
+        <li class="list-group-item">
+	{{exp.id}} {{exp.name}} {{exp.status}} {{exp.overlay}}
+        </li>
+    {% else %}
+        <li><em>No experiments exist</em></li>
+    {% endfor %}
+    </ul>
+    <h3>Registered Commands</h3>
+    <ul class="list-group">
+	<li class="list-group-item">
+	Command ID | Experiment ID | Command Text | Nodes
+    	</li>
+    {% for com in commands %}
+        <li class="list-group-item">
+	{{com.id}} | {{com.experimentId}} |  {{com.command}} |  {% for node in com.nodes.all() %} {{node.id}}  {% endfor %}
+        </li>
+    {% else %}
+        <li><em>No experiments exist</em></li>
+    {% endfor %}
+    </ul>
+
+
+{% endblock %}

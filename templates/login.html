@@ -1,17 +1,66 @@
-{% extends "layout.html" %}
-{% block body %}
-<h1>Login</h1>
-{% if error %}
-<p class=error><strong>Error:</strong> {{ error }}
-{% endif %}
-<form action="" method=post>
-	<dl>
-		<dt>Username:
-		<dd><input type=text name=username value="{{
-		request.form.username }}">
-		<dt>Password:
-		<dd><input type=password name=password>
-	</dl>
-	<p><input type=submit value=Login>
-</form>
-{% endblock %}
+<!doctype html>
+<html>
+<head>
+  <title>Wibed Server</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="css/bootstrap.min.css") }}"  media="screen">
+  <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="css/bootstrap-theme.min.css") }}"  media="screen">
+  <style>
+    body {
+      padding-top: 20px;
+    }
+    .main {
+      padding: 40px 15px;
+    }
+    .unreachable {
+      text-decoration: line-through;
+    }
+  </style>
+
+</head>
+<body>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">Wibed Server</a>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="main">
+      <div class="row">
+        {% for message in get_flashed_messages() %}
+          <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+      </div>
+  <h1>Login</h1>
+  {% if error %}
+  <p class=error><strong>Error:</strong> {{ error }}
+  {% endif %}
+  <form action="" method=post>
+	  <dl>
+		  <dt>Username:
+		  <dd><input type=text name=username value="{{
+		  request.form.username }}">
+		  <dt>Password:
+		  <dd><input type=password name=password>
+	  </dl>
+	  <p><input type=submit value=Login>
+  </form>
+    </div>
+
+  </div>
+
+  <script src="{{ url_for("static", filename="js/jquery-1.10.2.min.js") }}"></script>
+  <script src="{{ url_for("static", filename="js/bootstrap.min.js") }}"></script>
+  
+
+</body>
+</html>

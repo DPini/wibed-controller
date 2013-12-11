@@ -13,7 +13,7 @@ class Command(db.Model):
     """
     Represents a command in a testbed experiment.
     """
-
+    __table_args__ = {'sqlite_autoincrement': True}
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     experimentId = db.Column(db.Integer, db.ForeignKey("experiment.id"))
     command = db.Column(db.Text)

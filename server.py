@@ -58,6 +58,12 @@ def create_app(config_object="settings.DevelopmentConfig"):
     from blueprints.firmware import bpFirmware
     app.register_blueprint(bpFirmware, url_prefix="/firmware")
 
+    from blueprints.resultsapi import bpResultsAPI
+    app.register_blueprint(bpResultsAPI, url_prefix="/api")
+    
+    from blueprints.results import bpResults
+    app.register_blueprint(bpResults, url_prefix="/results")
+    
     #DB debug page
     if app.debug :
 	    from blueprints.dbdebug import bpDb
@@ -71,6 +77,9 @@ def create_app(config_object="settings.DevelopmentConfig"):
 
         if not os.path.isdir(app.config["FIRMWARE_DIR"]):
             os.makedirs(app.config["FIRMWARE_DIR"])
+
+        if not os.path.isdir(app.config["RESULTS_DIR"]):
+            os.makedirs(app.config["RESULTS_DIR"])
 
     #Default route
     @app.route("/")

@@ -5,6 +5,7 @@ class Config:
     SECRET_KEY = "WIBED"
     OVERLAY_DIR = "static/overlays"
     FIRMWARE_DIR = "static/firmwares"
+    RESULTS_DIR = "static/results"
     REACHABLE_WINDOW = 180 ## number of seconds after which a node that hasn't
                            ## made contact is shown as unreachable
 

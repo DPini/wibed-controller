@@ -14,6 +14,7 @@ class Experiment(db.Model):
     """
     Represents a testbed experiment.
     """
+    __table_args__ = {'sqlite_autoincrement': True}
 
     Status = Enum("Status", "PREPARING RUNNING FINISHED")
 

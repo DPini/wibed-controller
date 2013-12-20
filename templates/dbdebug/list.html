@@ -14,7 +14,7 @@
     <ul class="list-group">
     {% for exp in experiments %}
         <li class="list-group-item">
-	{{exp.id}} {{exp.name}} {{exp.status}} {{exp.overlay}}
+	{{exp.id}} {{exp.name}} {{exp.status}} {{exp.overlay}} {% for expcom in exp.commands.all() %} {{expcom.id}} {% endfor %}
         </li>
     {% else %}
         <li><em>No experiments exist</em></li>

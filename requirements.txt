@@ -1,6 +1,8 @@
 Flask==0.10.1
+Flask-AutoIndex==0.5
 Flask-DebugToolbar==0.8.0
 Flask-SQLAlchemy==1.0
+Flask-Silk==0.2
 Jinja2==2.7.1
 MarkupSafe==0.18
 SQLAlchemy==0.8.3

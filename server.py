@@ -10,10 +10,10 @@ from flask import Flask, redirect, url_for, render_template, request, flash
 #from flask_debugtoolbar import DebugToolbarExtension
 
 def create_app(config_object="settings.DevelopmentConfig"):
-    #Creat Flask app
+    #Create Flask app
     app = Flask(__name__)
     app.config.from_object(config_object)
-
+	    
     # Enable for degubbing purposes
     # Needs flask_debugtoolbar installed
     #toolbar = DebugToolbarExtension(app)
@@ -63,6 +63,11 @@ def create_app(config_object="settings.DevelopmentConfig"):
     
     from blueprints.results import bpResults
     app.register_blueprint(bpResults, url_prefix="/results")
+
+    from blueprints.repo import bpRepo
+    app.register_blueprint(bpRepo, url_prefix="/wibed")
+
+
     
     #DB debug page
     if app.debug :

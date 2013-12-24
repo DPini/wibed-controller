@@ -4,9 +4,8 @@
     <ul class="list-group">
     {% for file in files %}
         <li class="list-group-item">
-	    <a href="{{ url_for("results.saved_file", filename=file.file) }}">
-               {{file.file}}
-           </a>
+	    Experiment {{file.dir}}:
+	   <a class="btn btn-default pull-right" href="{{ url_for("results.saved_file", filename=file.file) }}">Download Results</a>
 	   <a class="btn btn-default pull-right" href="{{ url_for(".list_res", exp=file.dir) }}">See Results</a>
         </li>
     {% else %}

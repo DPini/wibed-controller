@@ -28,7 +28,6 @@ def saveFile():
 		exp = Experiment.query.get(expId)
 		if True :
 			logging.debug(exp)
-			logging.debug(exp.name)
 			# Better  solution the experiment idi guess
 			#expName = exp.name if exp else str(expId)
 			expName  =  str(expId)

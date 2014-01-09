@@ -30,8 +30,12 @@ def wibednode(id):
 
         # If it doesn't exist, create a new one
         if not node:
-            node = Node(id)
-            db.session.add(node)
+		if Node.Status(input["status"]) == Node.Status.IDLE:
+			output["reinit"] = {}
+			return jsonify(**output)
+		else:
+			node = Node(id)
+            		db.session.add(node)
 
         # Update node fields based on input
         updateNode(node, input)

@@ -8,6 +8,8 @@ from database import db
 from models.node import Node
 from models.experiment import Experiment
 from models.command import Command
+from models.firmware import Upgrade, Firmware
+
 
 bpDb = Blueprint("dbdebug", __name__, template_folder="../templates")
 
@@ -20,6 +22,8 @@ def list():
     nodes = Node.query.all()
     experiments = Experiment.query.all()
     commands = Command.query.all()
+    upgrades = Upgrade.query.all()
+    firmwares  = Firmware.query.all()
 
-    return render_template("dbdebug/list.html", nodes=nodes, experiments=experiments, commands=commands)
+    return render_template("dbdebug/list.html", nodes=nodes, experiments=experiments, commands=commands, upgrades=upgrades, firmwares= firmwares)
 

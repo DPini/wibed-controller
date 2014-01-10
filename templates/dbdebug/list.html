@@ -33,6 +33,34 @@
         <li><em>No experiments exist</em></li>
     {% endfor %}
     </ul>
+    
+    <h3>Registered Firmwares</h3>
+    <ul class="list-group">
+	<li class="list-group-item">
+	Firmware ID | Version | Hash
+    	</li>
+    {% for fir in firmwares %}
+        <li class="list-group-item">
+	{{fir.id}} | {{fir.version}} |  {{fir.hash}} 
+        </li>
+    {% else %}
+        <li><em>No firmwares exist</em></li>
+    {% endfor %}
+    </ul>
 
+    <h3>Registered Upgrades</h3>
+    <ul class="list-group">
+	<li class="list-group-item">
+	Upgrade ID | Firmware ID | Upgrade Time | Nodes
+    	</li>
+    {% for upg in upgrades %}
+        <li class="list-group-item">
+	{{upg.id}} | {{upg.firmwareId}} |  {{upg.upgradeTime}} |  {% for node in upg.nodes.all() %} {{node.id}}  {% endfor %}
+        </li>
+    {% else %}
+        <li><em>No upgrades exist</em></li>
+    {% endfor %}
+    </ul>
+    
 
 {% endblock %}

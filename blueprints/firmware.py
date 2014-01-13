@@ -13,6 +13,8 @@ from database import db
 from models.firmware import Firmware, Upgrade
 from models.node import Node
 
+import logging
+
 bpFirmware = Blueprint("firmware", __name__, template_folder="../templates")
 
 @bpFirmware.route("/")
@@ -52,6 +54,18 @@ def add():
                 firmwareFileName))
         except KeyError:
             raise Exception("Invalid firmware uploaded")
+        
+        hashUploaded = None
+
+        try:
+	     hashUploaded = request.form['hash'].strip()
+	     logging.debug("File hash: %s", firmwareHash)
+	     logging.debug("Uploaded hash: %s", hashUploaded)
+	     if firmwareHash != hashUploaded :
+	     	flash("File has wrong hash")
+		return redirect(url_for(".list"))
+	except KeyError:
+            raise Exception("Error validating checksum")
 
         firmware = Firmware(version, firmwareHash)
         db.session.add(firmware)

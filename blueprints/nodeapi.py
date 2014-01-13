@@ -130,10 +130,16 @@ def handleFirmwareUpgrade(node, input, output):
             db.session.commit()
         # Else if node still has to start the upgrade, send upgrade data
         else:
+	    logging.debug("Proceeding to Firmware Upgrade")
             output["upgrade"] = {}
             output["upgrade"]["version"] = activeUpgrade.firmware.version
-            output["upgrade"]["utime"] = activeUpgrade.upgradeTime.timestamp()
-            output["upgrade"]["hash"] = activeUpgrade.firmware.hash
+	    # UpgradeTime is a python timestamp
+            # the timestamp function exists only in python > 3.3
+	    #output["upgrade"]["utime"] = activeUpgrade.upgradeTime.timestamp()
+            # instead of that we produce a unix timestamp using strftime
+	    installTime = int(activeUpgrade.upgradeTime.strftime("%s"))
+	    output["upgrade"]["utime"] = installTime
+	    output["upgrade"]["hash"] = activeUpgrade.firmware.hash
 
 def handleCommands(node, input, output):
     activeExperiment = node.activeExperiment

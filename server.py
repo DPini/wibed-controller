@@ -20,7 +20,7 @@ def create_app(config_object="settings.DevelopmentConfig"):
 
     #Define log level
     logLevel= logging.DEBUG if app.debug else logging.INFO
-    logging.basicConfig(filename='server.log',level = logLevel)
+    logging.basicConfig(filename='/var/log/wibed-server.log',level = logLevel)
     logging.info('Started')
     logging.debug('Debug mode enabled')
 

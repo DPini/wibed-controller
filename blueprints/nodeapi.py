@@ -126,20 +126,30 @@ def handleFirmwareUpgrade(node, input, output):
 
         # If node finished firmware upgrade
         if node.installedFirmware.version == activeUpgrade.firmware.version:
+            logging.debug("SUCCESS in UPGRADING node %s", node.id)
             node.activeUpgrade = None
             db.session.commit()
         # Else if node still has to start the upgrade, send upgrade data
         else:
-	    logging.debug("Proceeding to Firmware Upgrade")
-            output["upgrade"] = {}
-            output["upgrade"]["version"] = activeUpgrade.firmware.version
-	    # UpgradeTime is a python timestamp
-            # the timestamp function exists only in python > 3.3
-	    #output["upgrade"]["utime"] = activeUpgrade.upgradeTime.timestamp()
-            # instead of that we produce a unix timestamp using strftime
-	    installTime = int(activeUpgrade.upgradeTime.strftime("%s"))
-	    output["upgrade"]["utime"] = installTime
-	    output["upgrade"]["hash"] = activeUpgrade.firmware.hash
+	        logging.debug("Proceeding to Firmware Upgrade")
+	        output["upgrade"] = {}
+	        output["upgrade"]["version"] = activeUpgrade.firmware.version
+	        # UpgradeTime is a python timestamp
+	        # the timestamp function exists only in python > 3.3
+	        #output["upgrade"]["utime"] = activeUpgrade.upgradeTime.timestamp()
+	        # instead of that we produce a unix timestamp using strftime
+	        installTime = int(activeUpgrade.upgradeTime.strftime("%s"))
+	        output["upgrade"]["utime"] = installTime
+	        output["upgrade"]["hash"] = activeUpgrade.firmware.hash
+	        # If the node is in INIT state and the firmware version is not the
+	        # upgraded one then there has been an error
+	        # So send UPGRADE reply to the node in order to infrom him about
+	        # to move to error state and also print error message and close 
+	        # upgrade session
+	        if node.status == Node.Status.INIT :
+	            logging.debug("ERROR in UPGRADING node %s", node.id)
+	            node.activeUpgrade = None
+	            db.session.commit()
 
 def handleCommands(node, input, output):
     activeExperiment = node.activeExperiment

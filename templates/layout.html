@@ -34,9 +34,15 @@
           <li><a href="{{url_for("experiment.list")}}">Experiments</a></li>
           <li><a href="{{url_for("node.list")}}">Nodes</a></li>
           <li><a href="{{url_for("admin.index")}}">Admin</a></li>
-          <li><a href="{{url_for("firmware.list")}}">Firmwares</a></li>
+	  {% if session.user=="admin" %}
+	  	<li><a href="{{url_for("firmware.list")}}">Firmwares</a></li>
+	  {% endif  %}
           <li><a href="{{url_for("results.list")}}">Results</a></li>
 	  <li><a href="{{url_for("index")}}wibed/">Repo</a></li>
+	  {% if session.user %}
+		<li style="color:#999">  User: {{ session.user }}    </li>
+		<span class="navbar-btn"><li><a href="{{url_for("logout")}}">Log Out</a></li>
+	  {% endif %}
         </ul>
       </div>
     </div>

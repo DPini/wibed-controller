@@ -3,9 +3,11 @@ Flask-AutoIndex==0.5
 Flask-DebugToolbar==0.8.0
 Flask-SQLAlchemy==1.0
 Flask-Silk==0.2
+Flask-WTF==0.9.4
 Jinja2==2.7.1
 MarkupSafe==0.18
 SQLAlchemy==0.8.3
+WTForms==1.0.5
 Werkzeug==0.9.4
 argparse==1.2.1
 blinker==1.3

@@ -31,29 +31,40 @@
       </div>
       </div>
     </div>
-  </div>
 
   <div class="container">
     <div class="main">
       <div class="row">
         {% for message in get_flashed_messages() %}
-          <div class="alert alert-info">{{ message }}</div>
+          <div class="alert alert-success">{{ message }}</div>
         {% endfor %}
       </div>
-  <h1>Login</h1>
-  {% if error %}
-  <p class=error><strong>Error:</strong> {{ error }}
-  {% endif %}
-  <form action="" method=post>
-	  <dl>
-		  <dt>Username:
-		  <dd><input type=text name=username value="{{
-		  request.form.username }}">
-		  <dt>Password:
-		  <dd><input type=password name=password>
-	  </dl>
-	  <p><input type=submit value=Login>
-  </form>
+
+      <div class="row">
+      {% for message in form.password.errors %}
+          <div class="alert alert-warning">{{ message }}</div>
+      {% endfor %}
+      </div>
+      
+      <div class="row">
+      {% for message in form.name.errors %}
+          <div class="alert alert-warning">{{ message }}</div>
+      {% endfor %}
+      </div>
+      
+      <h2>Login</h2>
+        <form action="{{ url_for('login') }}" method=post>
+		{{ form.hidden_tag() }}
+		
+		{{ form.name.label }}:</br>
+		{{ form.name }}
+		</br>
+		{{ form.password.label }}:</br>
+		{{ form.password }}
+		</br>
+		{{ form.submit}}
+	</form>
+
     </div>
 
   </div>

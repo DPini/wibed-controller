@@ -3,8 +3,8 @@
 import os
 import logging
 
-from flask import Flask, redirect, url_for, render_template, request, flash
-
+from flask import Flask, redirect, url_for, render_template, request, flash, session, escape
+from forms import LoginForm
 # Enable for degubbing purposes
 # Needs flask_debugtoolbar installed
 #from flask_debugtoolbar import DebugToolbarExtension
@@ -13,7 +13,7 @@ def create_app(config_object="settings.DevelopmentConfig"):
     #Create Flask app
     app = Flask(__name__)
     app.config.from_object(config_object)
-	    
+    
     # Enable for degubbing purposes
     # Needs flask_debugtoolbar installed
     #toolbar = DebugToolbarExtension(app)
@@ -67,7 +67,6 @@ def create_app(config_object="settings.DevelopmentConfig"):
     from blueprints.repo import bpRepo
     app.register_blueprint(bpRepo, url_prefix="/wibed")
 
-
     
     #DB debug page
     if app.debug :
@@ -76,6 +75,10 @@ def create_app(config_object="settings.DevelopmentConfig"):
 
     #Initiliaze App
     @app.before_first_request
+    def initialize():
+	    initializeFolders()
+	    initializeUsers()
+
     def initializeFolders():
         if not os.path.isdir(app.config["OVERLAY_DIR"]):
             os.makedirs(app.config["OVERLAY_DIR"])
@@ -85,24 +88,54 @@ def create_app(config_object="settings.DevelopmentConfig"):
 
         if not os.path.isdir(app.config["RESULTS_DIR"]):
             os.makedirs(app.config["RESULTS_DIR"])
+    
+    def initializeUsers():
+	    from database import db
+	    from models.user import User
+	    #Create db Users
+	    admin = User("admin","wibed")
+	    user = User("wibed","wibed")
+	    db.session.add(admin)
+	    db.session.add(user)
+	    db.session.commit()
+
+    @app.before_request
+    def check_user():
+	    if 'user' not in session and request.endpoint != 'login' :
+		    flash("Not logged in")
+		    return redirect(url_for('login'))
 
     #Default route
     @app.route("/")
     def index():
+	    if 'user' in session:
+		    return redirect(url_for("experiment.list"))
             return redirect(url_for("login"))
 
     #Login page
     @app.route('/login', methods=['GET', 'POST'])
     def login():
-	     error = None
-	     if request.method == 'POST':
-		     if request.form['username'] != 'wibed' or \
-				     request.form['password'] != 'wibed':
-			 error = 'Invalid credentials'
-		     else:
-			 flash('You were successfully logged in')
+	    form = LoginForm()
+	    #error = None
+	    if request.method == 'POST':
+		    if form.validate() == False:
+			    return render_template('login.html', form=form)
+		    else:
+			 msg = "Succesfully logged in as: "+form.name.data
+			 flash(msg)
+			 session['user'] = form.name.data
 			 return redirect(url_for("experiment.list"))
-	     return render_template('login.html', error=error)
+	    elif request.method == 'GET':
+		     return render_template('login.html', form=form)
+
+    @app.route('/logout')
+    def logout():
+	    if 'user' not in session:
+		    flash("Not logged in")
+		    return redirect(url_for('login'))
+	    logging.debug(escape(session['user']))
+	    session.pop('user', None)
+	    return redirect(url_for('index'))
 
     return app
 

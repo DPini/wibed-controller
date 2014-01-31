@@ -12,15 +12,10 @@ from werkzeug import secure_filename
 from database import db
 from models.firmware import Firmware, Upgrade
 from models.node import Node
-from restrictions import admin_required
 
 import logging
 
 bpFirmware = Blueprint("firmware", __name__, template_folder="../templates")
-
-@bpFirmware.before_request
-def restrict():
-	return admin_required()
 
 @bpFirmware.route("/")
 def index():

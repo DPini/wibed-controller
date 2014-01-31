@@ -1,9 +1,16 @@
 {% extends "layout.html" %}
 {% block body %}
     <h2>Node '{{node.id}}'</h2>
+    {% if session.user=="admin" %}    
     <div class="well">
-      <a class="btn btn-danger" href="{{url_for("node.remove", id=node.id)}}">Remove</a>
+	<a class="btn btn-danger" href="{{url_for("node.remove", id=node.id)}}">Remove</a>
+      	{% if node.show %}
+      		<a class="btn btn-default" href="{{url_for("node.hide", id=node.id)}}">Hide from User</a>
+      	{% else %}
+      		<a class="btn btn-default" href="{{url_for("node.unhide", id=node.id)}}">Show to User</a>
+      	{% endif  %}
     </div>
+    {% endif %}
     <ul>
         <li>
             <strong>Model:</strong> {{node.model}}

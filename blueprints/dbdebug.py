@@ -9,17 +9,9 @@ from models.node import Node
 from models.experiment import Experiment
 from models.command import Command
 from models.firmware import Upgrade, Firmware
-from restrictions import admin_required
 
-import logging
 
 bpDb = Blueprint("dbdebug", __name__, template_folder="../templates")
-
-@bpDb.before_request
-def restrict():
-	return admin_required()
-
-#bpDb.before_request(restrictions.admin_required())
 
 @bpDb.route("/")
 def index():

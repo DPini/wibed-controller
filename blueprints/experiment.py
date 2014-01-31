@@ -16,6 +16,8 @@ from models.node import Node
 from models.command import Command
 from models.execution import Execution
 
+from restrictions import get_nodes
+
 bpExperiment = Blueprint("experiment", __name__, \
         template_folder="../templates")
 
@@ -38,11 +40,8 @@ def list():
 @bpExperiment.route("/add", methods=["GET", "POST"])
 def add():
     if request.method == "GET":
-        query = Node.query.filter(Node.available == True)
-        print(query)
-        nodes = query.all()
         overlays = enumerate(sorted(os.listdir(app.config["OVERLAY_DIR"])))
-        return render_template("experiment/add.html", freeNodes=nodes, 
+        return render_template("experiment/add.html", freeNodes=get_nodes("Node.available == True"), 
                 overlays=overlays)
     elif request.method == "POST":
         try:

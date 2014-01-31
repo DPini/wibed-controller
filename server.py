@@ -3,7 +3,7 @@
 import os
 import logging
 
-from flask import Flask, redirect, url_for, render_template, request, flash, session, escape
+from flask import Flask, redirect, url_for, render_template, request, flash, session, escape, abort
 from forms import LoginForm
 # Enable for degubbing purposes
 # Needs flask_debugtoolbar installed
@@ -98,18 +98,38 @@ def create_app(config_object="settings.DevelopmentConfig"):
 	    db.session.add(admin)
 	    db.session.add(user)
 	    db.session.commit()
-
+	    
     @app.before_request
-    def check_user():
-	    if 'user' not in session and request.endpoint != 'login' :
-		    flash("Not logged in")
-		    return redirect(url_for('login'))
+    def authorize():
+	    #Guarantee that only logged in users have access to the services
+	    if 'user' not in session:
+		    if not request.endpoint or (("API" not in request.endpoint) and request.endpoint not in ['login','static']) :
+			    #logging.debug("BLUEPRINT: %s",request.endpoint)
+			    flash("Not logged in")
+			    return redirect(url_for('login'))
+		    
+	    #Associate bluprints with user role
+	    adminBp = ["index", "static", "login", "logout", "firmware","dbdebug","admin", "node" ]
+	    userBp = ["index", "static", "login", "logout", "experiment", "node", "results", "repo", "admin"]
+
+	    if ('user' in session) and request.endpoint and "API" not in request.endpoint:
+		    logging.debug("BLUEPRINT: %s",request.endpoint)
+		    if session['user'] == "admin" :
+			    if not [bp for bp in adminBp if bp in request.endpoint]  :
+				    abort(401)
+		    else:
+			    if not [bp for bp in userBp if bp in request.endpoint]  :
+				    abort(401)
 
     #Default route
     @app.route("/")
     def index():
 	    if 'user' in session:
-		    return redirect(url_for("experiment.list"))
+		    logging.debug("DEFAULT ROUTE for User: %s", session['user'])
+		    if session['user'] == "admin" :
+			    return redirect(url_for('admin.index'))
+		    else:
+			    return redirect(url_for("experiment.list"))
             return redirect(url_for("login"))
 
     #Login page
@@ -124,7 +144,7 @@ def create_app(config_object="settings.DevelopmentConfig"):
 			 msg = "Succesfully logged in as: "+form.name.data
 			 flash(msg)
 			 session['user'] = form.name.data
-			 return redirect(url_for("experiment.list"))
+			 return redirect(url_for("index"))
 	    elif request.method == 'GET':
 		     return render_template('login.html', form=form)
 

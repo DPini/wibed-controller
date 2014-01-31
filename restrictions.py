@@ -1,14 +1,20 @@
-from flask import session, redirect, url_for, abort,flash
+from flask import session
+from models.node import Node
 import logging
 
-def admin_required():
-	if 'user' not in session:
-		flash("Not logged in")
-		return redirect(url_for('login'))
-	if session['user'] != "admin":
-		abort(401)
 
-def user_required():
-	if 'user' not in session:
-		flash("Not logged in")
-		return redirect(url_for('login'))
+def get_nodes(custom_filter):
+	if custom_filter:
+		if session['user'] != "admin":
+			nodes = eval("Node.query.filter("+custom_filter+", Node.show == True)")
+			return nodes 
+		else:
+			nodes = eval("Node.query.filter("+custom_filter+")")
+			return nodes
+	else :
+		if session['user'] != "admin":
+			return Node.query.filter(Node.show == True)
+		else:
+			return Node.query.all()
+
+		

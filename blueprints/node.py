@@ -2,11 +2,13 @@
 
 from flask import Blueprint
 from flask import request, render_template, flash, redirect, \
-                  url_for
+                  url_for, session
 
 from database import db
 from models.node import Node
 from models.execution import Execution
+
+from restrictions import get_nodes
 
 bpNode = Blueprint("node", __name__, template_folder="../templates")
 
@@ -16,8 +18,7 @@ def index():
 
 @bpNode.route("/list")
 def list():
-    nodes = Node.query.all()
-    return render_template("node/list.html", nodes=nodes)
+    return render_template("node/list.html", nodes=get_nodes(None))
 
 @bpNode.route("/add", methods = ["GET", "POST"])
 def add():
@@ -42,4 +43,20 @@ def remove(id):
 @bpNode.route("/show/<id>")
 def show(id):
     node = Node.query.get_or_404(id)
+    return render_template("node/show.html", node=node)
+
+@bpNode.route("/hide/<id>")
+def hide(id):
+    node = Node.query.get_or_404(id)
+    if node.show:
+	    node.show = False
+	    db.session.commit()
+    return render_template("node/show.html", node=node)
+
+@bpNode.route("/unhide/<id>")
+def unhide(id):
+    node = Node.query.get_or_404(id)
+    if not node.show:
+	    node.show = True
+	    db.session.commit()
     return render_template("node/show.html", node=node)

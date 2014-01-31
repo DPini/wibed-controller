@@ -22,6 +22,7 @@ class Node(db.Model):
     lastContact = db.Column(db.DateTime)
     experimentId = db.Column(db.Integer, db.ForeignKey("experiment.id"))
     upgradeId = db.Column(db.Integer, db.ForeignKey("upgrade.id"))
+    show = db.Column(db.Boolean, default=False)
 
     activeExperiment = db.relationship("Experiment")
     activeUpgrade = db.relationship("Upgrade")

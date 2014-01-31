@@ -55,5 +55,30 @@
                 {% endfor %}
             </ul>
         </li>
+	{% if node.description %}
+	<li>
+            <strong>Description:</strong> {{node.description}}
+	</li>
+</ul>
+	{% endif%}
+	{% if session.user=="admin" %}
+</ul>
+	 <div class="well">
+		 <form class="form-horizontal" action="{{ url_for("node.description", id=node.id) }}" method="post">
+			 <fieldset>
+				 <legend>Add Description</legend>
+				 <div class="form-group">
+					 <label for="description" class="col-sm-2 control-label">Description:</label>
+					 <div class="col-sm-10">
+						 <input type="text" class="form-control input-sm" name="description" id="description" size="140" />
+					 </div>
+				 </div>
+				 <input class="btn btn-primary" type="submit" value="Add">
+			 </fieldset>
+		 </form>
+	 </div>
+	 {% endif %}
+
+	   
     </ul>
 {% endblock %}

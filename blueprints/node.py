@@ -60,3 +60,14 @@ def unhide(id):
 	    node.show = True
 	    db.session.commit()
     return render_template("node/show.html", node=node)
+
+@bpNode.route("/description/<id>", methods=['POST'])
+def description(id):
+    node = Node.query.get_or_404(id)
+    description = request.form["description"]
+    if description:
+	    node.description= description
+	    db.session.commit()
+    return render_template("node/show.html", node=node)
+    
+

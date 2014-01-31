@@ -23,6 +23,7 @@ class Node(db.Model):
     experimentId = db.Column(db.Integer, db.ForeignKey("experiment.id"))
     upgradeId = db.Column(db.Integer, db.ForeignKey("upgrade.id"))
     show = db.Column(db.Boolean, default=False)
+    description = db.Column(db.Text)
 
     activeExperiment = db.relationship("Experiment")
     activeUpgrade = db.relationship("Upgrade")

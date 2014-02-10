@@ -109,8 +109,8 @@ def create_app(config_object="settings.DevelopmentConfig"):
 			    return redirect(url_for('login'))
 		    
 	    #Associate bluprints with user role
-	    adminBp = ["index", "static", "login", "logout", "firmware","dbdebug","admin", "node" ]
-	    userBp = ["index", "static", "login", "logout", "experiment", "node", "results", "repo", "admin"]
+	    adminBp = ["index", "static", "login", "logout", "firmware","dbdebug","admin", "node", "command"]
+	    userBp = ["index", "static", "login", "logout", "experiment", "node", "results", "repo", "admin", "command"]
 
 	    if ('user' in session) and request.endpoint and "API" not in request.endpoint:
 		    logging.debug("BLUEPRINT: %s",request.endpoint)

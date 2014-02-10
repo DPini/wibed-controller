@@ -7,7 +7,7 @@
     {% for node in nodes %}
         <li class="list-group-item">
             <a href="{{ url_for("node.show", id=node.id) }}">
-               {{node.id}} (<span {% if not node.reachable %}class="unreachable"{% endif%}>{{node.status.name | capitalize}}</span> - {{node.lastSeenStr}} secs. ago)
+		    {{node.id}} (<span {% if not node.reachable %}class="unreachable"{% endif%}>{{node.status.name | capitalize}}</span> - {{node.lastSeenStr}} secs. ago {% if session.user=="admin"%} - {% if node.show %} Visible {% else %} Invisible {% endif %}{% endif %})
             </a>
         </li>
     {% else %}

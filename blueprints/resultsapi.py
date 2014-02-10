@@ -21,22 +21,23 @@ def saveFile():
 	try:
 		logging.debug("/api/results:  Attempt to POST a file")
 		resultFile = request.files["file"]
-		#name = request.form["name"]
 		name = secure_filename(resultFile.filename)
 		expId = int((name.split("."))[0])
-		logging.debug("The id of the experiments is: %s", expId)
-		exp = Experiment.query.get(expId)
-		if True :
+		exp = Experiment.query.get(int(expId))
+		# If the experiment exists
+		if exp :
 			logging.debug(exp)
-			# Better  solution the experiment idi guess
-			#expName = exp.name if exp else str(expId)
-			expName  =  str(expId)
-			logging.debug("The name of the experiments is: %s", expName)
-			filePath = os.path.join(app.config["RESULTS_DIR"],name)
-			logging.debug("Saving the file in : %s", filePath)
+			# Naming of folders and files
+			expName = exp.name+"_"+str(exp.creationTime)
+			expName=expName.replace(" ","_")
+			expName=expName.replace(":","-")
+			expName=(expName.split("."))[0]
+			logging.debug("The name of the experiment file is: %s", expName)
+			filePath = os.path.join(app.config["RESULTS_DIR"],expName+".tar.gz")
+			logging.debug("Saving the results in : %s", filePath)
 			resultFile.save(filePath)
 			newDir = os.path.join(app.config["RESULTS_DIR"],expName)
-			logging.debug("Extracting the file in : %s", newDir)
+			logging.debug("Extracting the fileis in the folder : %s", newDir)
 			try:
 				os.mkdir(newDir)
 				logging.debug("New dir created")
@@ -46,9 +47,10 @@ def saveFile():
 			tar = tarfile.open(filePath)
 			tar.extractall(newDir)
 			tar.close()
-			logging.debug("The file %s is saved", name)
 			return jsonify({"exit":"success"})
+		# If the experiment does not exist
 		else :
+			logging.debug("ERROR storing file, no relevant experiment found")
 			return jsonify({"exit":"fail"})
 	except:
 		return jsonify({"exit":"fail"})

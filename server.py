@@ -103,14 +103,14 @@ def create_app(config_object="settings.DevelopmentConfig"):
     def authorize():
 	    #Guarantee that only logged in users have access to the services
 	    if 'user' not in session:
-		    if not request.endpoint or (("API" not in request.endpoint) and request.endpoint not in ['login','static']) :
-			    #logging.debug("BLUEPRINT: %s",request.endpoint)
+		    if not request.endpoint or (("API" not in request.endpoint) and request.endpoint not in ['login','static', 'bpRepo.autoindex', '__autoindex__.static', 'bpRepo.silkicon']) :
+			    logging.debug("BLUEPRINT: %s",request.endpoint)
 			    flash("Not logged in")
 			    return redirect(url_for('login'))
 		    
 	    #Associate bluprints with user role
 	    adminBp = ["index", "static", "login", "logout", "firmware","dbdebug","admin", "node", "command"]
-	    userBp = ["index", "static", "login", "logout", "experiment", "node", "results", "repo", "admin", "command"]
+	    userBp = ["index", "static", "login", "logout", "experiment", "node", "results", "admin", "command"]
 
 	    if ('user' in session) and request.endpoint and "API" not in request.endpoint:
 		    logging.debug("BLUEPRINT: %s",request.endpoint)

@@ -2,11 +2,10 @@
 {% block body %}
     <h2>Saved Results</h2>
     <ul class="list-group">
-    {% for file in files %}
+    {% for dir in dirs %}
         <li class="list-group-item">
-           <em> {{file.dir}}</em>:
-	   <a class="btn btn-default pull-right" href="{{ url_for("results.saved_file", filename=file.file) }}">Download Results</a>
-	   <a class="btn btn-default pull-right" href="{{ url_for(".list_res", exp=file.dir) }}">See Results</a>
+           <em> {{dir}}</em>:
+	   <a class="btn btn-default pull-right" href="{{ url_for(".list_exp", exp=dir) }}">See Results</a>
         </li>
     {% else %}
         <li><em>No results exist</em></li>

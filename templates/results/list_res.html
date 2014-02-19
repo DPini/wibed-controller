@@ -4,7 +4,7 @@
     <ul class="list-group">
     {% for file in files %}
         <li class="list-group-item">
-	    <a href="{{ url_for("results.saved_result", exp=exp, filename=file) }}">
+	    <a href="{{ url_for("results.saved_res", expDir=expDir, nodeDir=nodeDir, filename=file) }}">
                {{file}}
            </a>
         </li>

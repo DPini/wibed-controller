@@ -21,37 +21,48 @@ def index():
 
 @bpResults.route("/list")
 def list():
-    # List the existing results
     RESULTS_DIR = app.config["RESULTS_DIR"]
-    files = [ f for f in os.listdir(RESULTS_DIR) ]
-    logging.debug(files)
-    files = filter(lambda x : os.path.isfile(RESULTS_DIR + "/" + x) ,files)
-    files = map(lambda x: {"dir" :(x.split("."))[0], "file":x},files)
-    logging.debug("The save files are: %s", files)
-    return render_template("results/list.html", files=files)
+    dirs = [ f for f in os.listdir(RESULTS_DIR) ]
+    return render_template("results/list.html", dirs=dirs)
 
-@bpResults.route("/<filename>")
-def saved_file(filename):
-	# Download the tarball with all the results if exists 
-	resPath = os.path.join(app.config['RESULTS_DIR'],filename)
-	if os.path.isfile(resPath):
-		return send_from_directory(app.config['RESULTS_DIR'],filename)
-	else:
-		abort(404)
-
-@bpResults.route("/<exp>/<filename>")
-def saved_result(exp, filename):
-	# Donwload a specific result file if exists
-	resDir = os.path.join(app.config['RESULTS_DIR'],exp)
-	resPath = os.path.join(resDir,filename)
-	if os.path.isfile(resPath):
-		return send_from_directory(resDir, filename)
-	else:
-		abort(404)
 
 @bpResults.route("/list/<exp>")
-def list_res(exp):
+def list_exp(exp):
+    # List the existing results
+    expDir = os.path.join(app.config["RESULTS_DIR"], exp)
+    files = [ f for f in os.listdir(expDir) ]
+    logging.debug(files)
+    files = filter(lambda x : os.path.isfile(expDir + "/" + x) ,files)
+    files = map(lambda x: {"dir" :(x.split("."))[0], "file":x},files)
+    logging.debug("The save files are: %s", files)
+    return render_template("results/list_exp.html", files=files, expDir=exp)
+
+@bpResults.route("/<expDir>/<filename>")
+def saved_file(expDir, filename):
+	# Donwload a specific result file if exists
+	resPath = os.path.join(app.config['RESULTS_DIR'],expDir)
+	filePath = os.path.join(resPath,filename)
+	logging.debug(filePath)
+	if os.path.isfile(filePath):
+		return send_from_directory(resPath, filename)
+	else:
+		abort(404)
+
+@bpResults.route("/list/<expDir>/<nodeDir>")
+def list_res(expDir,nodeDir):
     # List the files of a specific experiment
-    resultsDir = os.path.join(app.config["RESULTS_DIR"],exp)
+    resultsDir = os.path.join(app.config["RESULTS_DIR"],expDir,nodeDir)
     files = [ f for f in os.listdir(resultsDir) ]
-    return render_template("results/list_res.html", files=files, exp=exp)
+    return render_template("results/list_res.html", files=files, expDir=expDir, nodeDir=nodeDir)
+
+@bpResults.route("/<expDir>/<nodeDir>/<filename>")
+def saved_res(expDir, nodeDir, filename):
+	# Donwload a specific result file if exists
+	logging.debug("Hi")
+	resPath = os.path.join(app.config['RESULTS_DIR'],expDir,nodeDir)
+	filePath = os.path.join(resPath,filename)
+	logging.debug(filePath)
+	if os.path.isfile(filePath):
+		return send_from_directory(resPath, filename)
+	else:
+		abort(404)

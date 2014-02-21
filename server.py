@@ -63,6 +63,12 @@ def create_app(config_object="settings.DevelopmentConfig"):
     
     from blueprints.results import bpResults
     app.register_blueprint(bpResults, url_prefix="/results")
+    
+    from blueprints.errorapi import bpErrorAPI
+    app.register_blueprint(bpErrorAPI, url_prefix="/api")
+    
+    from blueprints.error import bpError
+    app.register_blueprint(bpError, url_prefix="/error")
 
     from blueprints.repo import bpRepo
     app.register_blueprint(bpRepo, url_prefix="/wibed")
@@ -89,6 +95,9 @@ def create_app(config_object="settings.DevelopmentConfig"):
         if not os.path.isdir(app.config["RESULTS_DIR"]):
             os.makedirs(app.config["RESULTS_DIR"])
     
+        if not os.path.isdir(app.config["ERROR_DIR"]):
+            os.makedirs(app.config["ERROR_DIR"])
+
     def initializeUsers():
 	    from database import db
 	    from models.user import User
@@ -109,8 +118,8 @@ def create_app(config_object="settings.DevelopmentConfig"):
 			    return redirect(url_for('login'))
 		    
 	    #Associate bluprints with user role
-	    adminBp = ["index", "static", "login", "logout", "firmware","dbdebug","admin", "node", "command"]
-	    userBp = ["index", "static", "login", "logout", "experiment", "node", "results", "admin", "command"]
+	    adminBp = ["index", "static", "login", "logout", "firmware","dbdebug","admin", "node", "command", "error"]
+	    userBp = ["index", "static", "login", "logout", "experiment", "node", "results", "admin", "command", "error"]
 
 	    if ('user' in session) and request.endpoint and "API" not in request.endpoint:
 		    logging.debug("BLUEPRINT: %s",request.endpoint)

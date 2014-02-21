@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h2>Saved Results</h2>
+    <ul class="list-group">
+    {% for file in files %}
+        <li class="list-group-item">
+           <em> {{file.dir}}</em>:
+	   <a class="btn btn-default pull-right" href="{{ url_for("results.saved_file", expDir=expDir, filename=file.file) }}">Download ResultsRe</a>
+	   <a class="btn btn-default pull-right" href="{{ url_for(".list_res", expDir=expDir, nodeDir=file.dir) }}">See Results</a>
+        </li>
+    {% else %}
+        <li><em>No results exist</em></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

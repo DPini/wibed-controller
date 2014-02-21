@@ -37,12 +37,14 @@
 		<li><a href="{{url_for("results.list")}}">Results</a></li>
           	<li><a href="{{url_for("admin.index")}}">Admin</a></li>
 		<li><a href="{{url_for("index")}}wibed/">Repo</a></li>
+		<li><a href="{{url_for("error.list")}}">Errors</a></li>
 	  {% elif session.user=="admin" %}
           	<li><a href="{{url_for("admin.index")}}">Admin</a></li>
 		<li><a href="{{url_for("node.list")}}">Nodes</a></li>
 	  	<li><a href="{{url_for("firmware.list")}}">Firmwares</a></li>
           	<li><a href="{{url_for("dbdebug.list")}}">dbDebug</a></li>
 		<li><a href="{{url_for("index")}}wibed/">Repo</a></li>
+		<li><a href="{{url_for("error.list")}}">Errors</a></li>
 	  {% endif  %}
 	  {% if session.user %}
 		<li style="color:#999">  User: {{ session.user }}    </li>

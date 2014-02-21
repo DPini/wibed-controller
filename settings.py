@@ -6,6 +6,7 @@ class Config:
     OVERLAY_DIR = "static/overlays"
     FIRMWARE_DIR = "static/firmwares"
     RESULTS_DIR = "static/results"
+    ERROR_DIR = "static/error"
     REACHABLE_WINDOW = 180 ## number of seconds after which a node that hasn't
                            ## made contact is shown as unreachable
 

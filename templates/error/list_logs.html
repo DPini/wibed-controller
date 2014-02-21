@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>Logs for Node {{nodeDir}}</h2>
+    <ul class="list-group">
+    {% for file in files %}
+        <li class="list-group-item">
+	    <a href="{{ url_for("error.saved_log", nodeDir=nodeDir, filename=file) }}">
+               {{file}}
+           </a>
+        </li>
+    {% else %}
+        <li><em>No results exist</em></li>
+    {% endfor %}
+
+    </ul>
+{% endblock %}

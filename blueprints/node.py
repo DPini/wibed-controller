@@ -36,6 +36,10 @@ def add():
 def remove(id):
     node = Node.query.get_or_404(id)
     Execution.query.filter_by(nodeId = id).delete()
+    upgrade = node.activeUpgrade
+    if upgrade :
+	    flash("Node is doing upgrade. Cannot delete!")
+	    return redirect(url_for(".show", id=node.id))
     db.session.delete(node)
     db.session.commit()
     return redirect(url_for(".list"))

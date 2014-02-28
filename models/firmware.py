@@ -51,3 +51,10 @@ class Upgrade(db.Model):
             node.activeUpgrade = self
 
         self.nodes.extend(nodes)
+
+    def active(self,nodes):
+	    for node in nodes:
+		    if node.activeUpgrade == self :
+			    return True
+	    return False
+			    

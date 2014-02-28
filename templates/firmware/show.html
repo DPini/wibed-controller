@@ -3,6 +3,7 @@
     <h2>Firmware '{{firmware.version}}'</h2>
     <div class="well">
         <a class="btn btn-success" href="{{url_for("firmware.install", id=firmware.id)}}">Install</a>
+        <a class="btn btn-danger" href="{{url_for("firmware.delete", id=firmware.id)}}">Delete</a>
     </div>
     <ul>
         <li>

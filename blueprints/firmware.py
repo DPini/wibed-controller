@@ -123,3 +123,22 @@ def show(id):
     return render_template("firmware/show.html", firmware=firmware,\
             upgradeOrders=upgradeOrders, nodesUpgraded=nodesUpgraded,
             nodesUpgrading=nodesUpgrading)
+
+
+
+@bpFirmware.route("/delete/<id>")
+def delete(id):
+	firmware = Firmware.query.get_or_404(id)
+    	nodesUpgraded = Node.query.filter(Node.firmwareId == id).all()
+	if nodesUpgraded:
+		flash("Cannot delete firmware installed in nodes")
+		return redirect(url_for(".show", id=id))
+    	nodesUpgrading = Node.query.join(Upgrade).filter(Upgrade.firmwareId == id).all()
+	for node in nodesUpgrading:
+		if node.activeUpgrade :
+			flash("Cannot delete firmware used currently to upgrade nodes")
+			return redirect(url_for(".show", id=id))
+	db.session.delete(firmware)
+	db.session.commit()
+	return redirect(url_for(".list"))
+	

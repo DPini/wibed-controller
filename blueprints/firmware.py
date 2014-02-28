@@ -47,6 +47,14 @@ def add():
 
         try:
             firmwareFile = request.files["firmware"]
+	    # Check if version is included in filename
+	    if not version in firmwareFile.filename:
+		    flash("Please make sure that the version typed has a corresponding "
+		    	   +"commit in the git repo (first 8 digits of commit tag)."
+			   +" To prevent vague mistakes we allow to upload only "
+			   +"firmwares with filenames that include the version "
+			   +"number entered (firmwares from server repo already do).")
+		    return redirect(url_for(".list"))
             firmwareFileName = secure_filename(version)
             firmwareHash = md5(firmwareFile.read()).hexdigest()
             firmwareFile.seek(0)

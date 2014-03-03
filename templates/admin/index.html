@@ -39,4 +39,5 @@
     {% else %}
       <li class="list-group-item"><em>No admin commands were issued yet.</em></li>
     {% endfor %}
+  <a class="btn btn-danger" href="{{url_for("admin.delCom")}}">Delete Finished Commands</a
 {% endblock %}

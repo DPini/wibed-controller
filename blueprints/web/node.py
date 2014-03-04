@@ -10,7 +10,7 @@ from models.execution import Execution
 
 from restrictions import get_nodes
 
-bpNode = Blueprint("node", __name__, template_folder="../templates")
+bpNode = Blueprint("web.node", __name__, template_folder="../templates")
 
 @bpNode.route("/")
 def index():

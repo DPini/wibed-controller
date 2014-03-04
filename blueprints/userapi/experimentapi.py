@@ -2,9 +2,9 @@
 
 from flask import Blueprint, jsonify
 from models.experiment import Experiment
-from blueprints.commandapi import commandExecutions
+from blueprints.userapi.commandapi import commandExecutions
 
-bpExperimentAPI = Blueprint("experimentAPI", __name__, template_folder="../templates")
+bpExperimentAPI = Blueprint("userAPI.experiment", __name__, template_folder="../templates")
 
 @bpExperimentAPI.route("/experimentInfo/<id>", methods=["GET"])
 def experimentInfo(id):

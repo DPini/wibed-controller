@@ -14,7 +14,7 @@ from werkzeug import secure_filename
 from models.experiment import Experiment
 from models.node import Node
 
-bpErrorAPI = Blueprint("ErrorAPI", __name__, template_folder="../templates")
+bpErrorAPI = Blueprint("nodeAPI.error", __name__, template_folder="../templates")
 
 @bpErrorAPI.route("/error/<nodeId>", methods=["POST"])
 def saveFile(nodeId):

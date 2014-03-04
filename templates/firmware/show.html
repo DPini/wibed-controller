@@ -2,8 +2,8 @@
 {% block body %}
     <h2>Firmware '{{firmware.version}}'</h2>
     <div class="well">
-        <a class="btn btn-success" href="{{url_for("firmware.install", id=firmware.id)}}">Install</a>
-        <a class="btn btn-danger" href="{{url_for("firmware.delete", id=firmware.id)}}">Delete</a>
+        <a class="btn btn-success" href="{{url_for(".install", id=firmware.id)}}">Install</a>
+        <a class="btn btn-danger" href="{{url_for(".delete", id=firmware.id)}}">Delete</a>
     </div>
     <ul>
         <li>
@@ -18,7 +18,7 @@
     <ul class="list-group">
     {% for node in firmware.nodes %}
         <li class="list-group-item">
-            <a href="{{url_for("node.show", id=node.id)}}">{{node.id}}</a>
+            <a href="{{url_for("web.node.show", id=node.id)}}">{{node.id}}</a>
         </li>
     {% else %}
         <li class="list-group-item"><em>No nodes have this firmware installed.</em></li>
@@ -32,7 +32,7 @@
             <strong>Upgrade time:</strong> {{upgradeOrder.upgradeTime}}
             <ul>
                 {% for node in upgradeOrder.nodes %}
-                <li><a href="{{url_for("node.show", id=node.id)}}">{{node.id}}</a></li>
+                <li><a href="{{url_for("web.node.show", id=node.id)}}">{{node.id}}</a></li>
                 {% endfor %}
         </li>
     {% else %}

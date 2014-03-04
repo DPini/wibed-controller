@@ -8,7 +8,7 @@ from database import db
 from models.command import Command
 from models.node import Node
 
-bpCommand = Blueprint("command", __name__, template_folder="../templates")
+bpCommand = Blueprint("web.command", __name__, template_folder="../templates")
 
 @bpCommand.route("/show/<id>")
 def show(id):
@@ -47,6 +47,6 @@ def add():
         db.session.rollback()
         flash("Error adding command '%s': %s" % (commandString, str(e))) 
     if experimentId:
-        return redirect(url_for("experiment.show", id=experimentId))
+        return redirect(url_for("web.experiment.show", id=experimentId))
     else:
-        return redirect(url_for("admin.index"))
+        return redirect(url_for("web.admin.index"))

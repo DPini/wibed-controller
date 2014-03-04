@@ -11,7 +11,7 @@ from models.command import Command
 from models.firmware import Upgrade, Firmware
 
 
-bpDb = Blueprint("dbdebug", __name__, template_folder="../templates")
+bpDb = Blueprint("web.dbdebug", __name__, template_folder="../templates")
 
 @bpDb.route("/")
 def index():

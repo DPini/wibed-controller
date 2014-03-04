@@ -18,7 +18,7 @@ from models.execution import Execution
 
 from restrictions import get_nodes
 
-bpExperiment = Blueprint("experiment", __name__, \
+bpExperiment = Blueprint("web.experiment", __name__, \
         template_folder="../templates")
 
 @bpExperiment.route("/")

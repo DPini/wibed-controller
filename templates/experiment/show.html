@@ -5,13 +5,13 @@
   <div class="well">
     <div class="btn-group">
       {% if experiment.status == Experiment.Status.PREPARING %}
-      <a class="btn btn-success" href="{{url_for("experiment.start", id=experiment.id)}}">Start</a>
+      <a class="btn btn-success" href="{{url_for(".start", id=experiment.id)}}">Start</a>
       {% endif %}
       {% if experiment.status != Experiment.Status.FINISHED %}
-      <a class="btn btn-warning" href="{{url_for("experiment.finish", id=experiment.id)}}">Finish</a>
+      <a class="btn btn-warning" href="{{url_for(".finish", id=experiment.id)}}">Finish</a>
       {% endif %}
       {% if experiment.status == Experiment.Status.FINISHED %}
-      <a class="btn btn-danger" href="{{url_for("experiment.remove", id=experiment.id)}}">Remove</a>
+      <a class="btn btn-danger" href="{{url_for(".remove", id=experiment.id)}}">Remove</a>
       {% endif %}
     </div>
   </div>
@@ -42,7 +42,7 @@
   <ul class="list-group">
     {% for node in nodes %}
     <li class="list-group-item">
-      <a href="{{url_for("node.show", id=node.id)}}">{{node.id}}</a>
+      <a href="{{url_for("web.node.show", id=node.id)}}">{{node.id}}</a>
       (<span><span {% if not node.reachable %}class="unreachable"{% endif%}>{{node.status.name | capitalize}}</span> - {{node.lastSeenStr}} secs. ago</span>)
     </li>
     {% else %}
@@ -54,7 +54,7 @@
   <ul class="list-group">
     {% for command in commands %}
     <li class="list-group-item">
-      <a href="{{url_for("command.show", id=command.id)}}">
+      <a href="{{url_for("web.command.show", id=command.id)}}">
         {{command.command}}
       </a>
       {{command.executions.count()}}/{{command.nodes.count()}}
@@ -66,7 +66,7 @@
 
   {% if experiment.status != Experiment.Status.FINISHED %}
   <div class="well">
-    <form class="form-horizontal" action="{{ url_for("command.add") }}" method="post">
+    <form class="form-horizontal" action="{{ url_for("web.command.add") }}" method="post">
       <fieldset>
         <legend>Add command</legend>
         <div class="form-group">

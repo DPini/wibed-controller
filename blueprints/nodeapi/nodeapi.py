@@ -13,7 +13,7 @@ from models.command import Command
 from models.execution import Execution
 from models.firmware import Firmware
 
-bpNodeAPI = Blueprint("nodeAPI", __name__, template_folder="../templates")
+bpNodeAPI = Blueprint("nodeAPI.node", __name__, template_folder="../templates")
 
 @bpNodeAPI.route("/wibednode/<id>", methods=["POST"])
 def wibednode(id):

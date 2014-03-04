@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify
 from models.execution import Execution
 from models.command import Command
 
-bpCommandAPI = Blueprint("commandAPI", __name__, template_folder="../templates")
+bpCommandAPI = Blueprint("userAPI.command", __name__, template_folder="../templates")
 
 def commandExecutions(command):
     executions = Execution.query.filter(Execution.commandId==command.id)

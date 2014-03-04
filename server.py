@@ -33,51 +33,57 @@ def create_app(config_object="settings.DevelopmentConfig"):
     from filters.nl2br import nl2br
     app.jinja_env.filters['nl2br'] = nl2br
 
-    #Load blueprints
-    from blueprints.experiment import bpExperiment
+    ## Load blueprints
+    # Web
+
+    from blueprints.web.experiment import bpExperiment
     app.register_blueprint(bpExperiment, url_prefix="/experiment")
 
-    from blueprints.node import bpNode
+    from blueprints.web.node import bpNode
     app.register_blueprint(bpNode, url_prefix="/node")
-
-    from blueprints.command import bpCommand
+    
+    from blueprints.web.command import bpCommand
     app.register_blueprint(bpCommand, url_prefix="/command")
 
-    from blueprints.nodeapi import bpNodeAPI
-    app.register_blueprint(bpNodeAPI, url_prefix="/api")
-
-    from blueprints.commandapi import bpCommandAPI
-    app.register_blueprint(bpCommandAPI, url_prefix="/api")
-
-    from blueprints.experimentapi import bpExperimentAPI
-    app.register_blueprint(bpExperimentAPI, url_prefix="/api")
-
-    from blueprints.admin import bpAdmin
+    from blueprints.web.admin import bpAdmin
     app.register_blueprint(bpAdmin, url_prefix="/admin")
 
-    from blueprints.firmware import bpFirmware
+    from blueprints.web.firmware import bpFirmware
     app.register_blueprint(bpFirmware, url_prefix="/firmware")
-
-    from blueprints.resultsapi import bpResultsAPI
-    app.register_blueprint(bpResultsAPI, url_prefix="/api")
     
-    from blueprints.results import bpResults
+    from blueprints.web.results import bpResults
     app.register_blueprint(bpResults, url_prefix="/results")
     
-    from blueprints.errorapi import bpErrorAPI
-    app.register_blueprint(bpErrorAPI, url_prefix="/api")
-    
-    from blueprints.error import bpError
+    from blueprints.web.error import bpError
     app.register_blueprint(bpError, url_prefix="/error")
 
-    from blueprints.repo import bpRepo
+    from blueprints.web.repo import bpRepo
     app.register_blueprint(bpRepo, url_prefix="/wibed")
-
     
-    #DB debug page
+    	#DB debug page
     if app.debug :
-	    from blueprints.dbdebug import bpDb
+	    from blueprints.web.dbdebug import bpDb
 	    app.register_blueprint(bpDb, url_prefix="/dbdebug")
+
+    # Node API
+
+    from blueprints.nodeapi.nodeapi import bpNodeAPI
+    app.register_blueprint(bpNodeAPI, url_prefix="/api")
+
+    from blueprints.nodeapi.errorapi import bpErrorAPI
+    app.register_blueprint(bpErrorAPI, url_prefix="/api")
+
+    from blueprints.nodeapi.resultsapi import bpResultsAPI
+    app.register_blueprint(bpResultsAPI, url_prefix="/api")
+    
+    # User API
+
+    from blueprints.userapi.commandapi import bpCommandAPI
+    app.register_blueprint(bpCommandAPI, url_prefix="/api")
+
+    from blueprints.userapi.experimentapi import bpExperimentAPI
+    app.register_blueprint(bpExperimentAPI, url_prefix="/api")
+    
 
     #Initiliaze App
     @app.before_first_request
@@ -110,10 +116,10 @@ def create_app(config_object="settings.DevelopmentConfig"):
 	    
     @app.before_request
     def authorize():
+	    logging.debug("BLUEPRINT: %s",request.endpoint)
 	    #Guarantee that only logged in users have access to the services
 	    if 'user' not in session:
-		    if not request.endpoint or (("API" not in request.endpoint) and request.endpoint not in ['login','static', 'bpRepo.autoindex', '__autoindex__.static', 'bpRepo.silkicon']) :
-			    logging.debug("BLUEPRINT: %s",request.endpoint)
+		    if not request.endpoint or (("nodeAPI" not in request.endpoint) and request.endpoint not in ['login','static', 'bpRepo.autoindex', '__autoindex__.static', 'bpRepo.silkicon']) :
 			    flash("Not logged in")
 			    return redirect(url_for('login'))
 		    
@@ -121,7 +127,7 @@ def create_app(config_object="settings.DevelopmentConfig"):
 	    adminBp = ["index", "static", "login", "logout", "firmware","dbdebug","admin", "node", "command", "error"]
 	    userBp = ["index", "static", "login", "logout", "experiment", "node", "results", "admin", "command", "error"]
 
-	    if ('user' in session) and request.endpoint and "API" not in request.endpoint:
+	    if ('user' in session) and request.endpoint and "nodeAPI" not in request.endpoint:
 		    logging.debug("BLUEPRINT: %s",request.endpoint)
 		    if session['user'] == "admin" :
 			    if not [bp for bp in adminBp if bp in request.endpoint]  :
@@ -136,9 +142,9 @@ def create_app(config_object="settings.DevelopmentConfig"):
 	    if 'user' in session:
 		    logging.debug("DEFAULT ROUTE for User: %s", session['user'])
 		    if session['user'] == "admin" :
-			    return redirect(url_for('admin.index'))
+			    return redirect(url_for('web.admin.index'))
 		    else:
-			    return redirect(url_for("experiment.list"))
+			    return redirect(url_for("web.experiment.list"))
             return redirect(url_for("login"))
 
     #Login page

@@ -10,7 +10,7 @@ from database import db
 
 from restrictions import get_nodes
 
-bpAdmin = Blueprint("admin", __name__, template_folder="../templates")
+bpAdmin = Blueprint("web.admin", __name__, template_folder="../templates")
 
 @bpAdmin.route("/")
 def index():
@@ -29,5 +29,3 @@ def delCom():
 	    		db.session.delete(command)
     	db.session.commit()
     	return redirect(url_for(".index"))
-
-

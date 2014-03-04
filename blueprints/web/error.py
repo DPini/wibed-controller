@@ -13,7 +13,7 @@ from database import db
 from models.node import Node
 from models.execution import Execution
 
-bpError = Blueprint("error", __name__, template_folder="../templates")
+bpError = Blueprint("web.error", __name__, template_folder="../templates")
 
 @bpError.route("/")
 def index():

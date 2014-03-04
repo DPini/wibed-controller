@@ -15,7 +15,7 @@ from models.node import Node
 
 import logging
 
-bpFirmware = Blueprint("firmware", __name__, template_folder="../templates")
+bpFirmware = Blueprint("web.firmware", __name__, template_folder="../templates")
 
 @bpFirmware.route("/")
 def index():

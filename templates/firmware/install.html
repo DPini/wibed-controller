@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
-    <form action="{{url_for("firmware.install", id=firmware.id)}}" method="post">
+    <form action="{{url_for(".install", id=firmware.id)}}" method="post">
         <fieldset>
             <legend>Install firmware {{firmware.version}}</legend>
             <ul>

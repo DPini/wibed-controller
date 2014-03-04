@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
   <div class="well">
-    <form class="form-horizontal" action="{{ url_for("command.add") }}" method="post">
+    <form class="form-horizontal" action="{{ url_for("web.command.add") }}" method="post">
         <fieldset>
             <legend>Add Command</legend>
             <div class="form-group">
@@ -31,7 +31,7 @@
   <ul class="list-group">
     {% for command in commands %}
       <li class="list-group-item">
-        <a href="{{url_for("command.show", id=command.id)}}">
+        <a href="{{url_for("web.command.show", id=command.id)}}">
           {{command.command}}
         </a>
         {{command.executions.count()}}/{{command.nodes.count()}}
@@ -39,5 +39,5 @@
     {% else %}
       <li class="list-group-item"><em>No admin commands were issued yet.</em></li>
     {% endfor %}
-  <a class="btn btn-danger" href="{{url_for("admin.delCom")}}">Delete Finished Commands</a
+  <a class="btn btn-danger" href="{{url_for(".delCom")}}">Delete Finished Commands</a
 {% endblock %}

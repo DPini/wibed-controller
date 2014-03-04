@@ -3,11 +3,11 @@
     <h2>Node '{{node.id}}'</h2>
     {% if session.user=="admin" %}    
     <div class="well">
-	<a class="btn btn-danger" href="{{url_for("node.remove", id=node.id)}}">Remove</a>
+	<a class="btn btn-danger" href="{{url_for(".remove", id=node.id)}}">Remove</a>
       	{% if node.show %}
-      		<a class="btn btn-default" href="{{url_for("node.hide", id=node.id)}}">Hide from User</a>
+      		<a class="btn btn-default" href="{{url_for(".hide", id=node.id)}}">Hide from User</a>
       	{% else %}
-      		<a class="btn btn-default" href="{{url_for("node.unhide", id=node.id)}}">Show to User</a>
+      		<a class="btn btn-default" href="{{url_for(".unhide", id=node.id)}}">Show to User</a>
       	{% endif  %}
     </div>
     {% endif %}
@@ -32,7 +32,7 @@
         <li>
             <strong>Current experiment:</strong>
             {% if node.activeExperiment %}
-                <a href="{{url_for("experiment.show", id=node.activeExperiment.id)}}">
+                <a href="{{url_for("web.experiment.show", id=node.activeExperiment.id)}}">
                     {{node.activeExperiment.name}}
                 </a>
             {% else %}
@@ -45,7 +45,7 @@
                 {% for experiment in node.experiments %}
                     {% if experiment != node.activeExperiment %}
                         <li>
-                            <a href="{{url_for("experiment.show", id=experiment.id)}}">
+                            <a href="{{url_for("web.experiment.show", id=experiment.id)}}">
                                 {{experiment.name}}
                             </a>
                         </li>
@@ -64,7 +64,7 @@
 	{% if session.user=="admin" %}
 </ul>
 	 <div class="well">
-		 <form class="form-horizontal" action="{{ url_for("node.description", id=node.id) }}" method="post">
+		 <form class="form-horizontal" action="{{ url_for(".description", id=node.id) }}" method="post">
 			 <fieldset>
 				 <legend>Add Description</legend>
 				 <div class="form-group">

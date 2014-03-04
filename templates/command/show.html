@@ -2,7 +2,7 @@
 {% block body %}
     <h1>Command '{{command.command}}'</h1>
     {% if command.experiment %}
-        in experiment <a href="{{url_for("experiment.show", id=command.experiment.id)}}">{{command.experiment.name}}</a>
+        in experiment <a href="{{url_for("web.experiment.show", id=command.experiment.id)}}">{{command.experiment.name}}</a>
     {% endif %}
     <h2>Results</h2>
     <ul class="list-group">

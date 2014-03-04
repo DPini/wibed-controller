@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
   <div class="well">
-    <form class="form-horizontal" action="{{ url_for("experiment.add") }}" method="post" enctype="multipart/form-data">
+    <form class="form-horizontal" action="{{ url_for(".add") }}" method="post" enctype="multipart/form-data">
         <fieldset>
             <legend>Add Experiment</legend>
             <div class="form-group">

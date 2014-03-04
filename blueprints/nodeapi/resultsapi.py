@@ -14,7 +14,7 @@ from werkzeug import secure_filename
 from models.experiment import Experiment
 from models.node import Node
 
-bpResultsAPI = Blueprint("ResultsAPI", __name__, template_folder="../templates")
+bpResultsAPI = Blueprint("nodeAPI.results", __name__, template_folder="../templates")
 
 @bpResultsAPI.route("/results/<nodeId>", methods=["POST"])
 def saveFile(nodeId):

@@ -1,8 +1,8 @@
-{% extends "layout.html" %}
+% extends "layout.html" %}
 {% block body %}
     <h2>Firmwares</h2>
     <div class="well">
-      <form class="form-horizontal" action="{{ url_for("firmware.add") }}" method="post" enctype="multipart/form-data">
+      <form class="form-horizontal" action="{{ url_for(".add") }}" method="post" enctype="multipart/form-data">
         <fieldset>
           <legend>Add Firmware</legend>
         <div class="form-group">
@@ -31,7 +31,7 @@
     <ul class="list-group">
     {% for firmware in installedFirmwares %}
         <li class="list-group-item">
-            <a href="{{url_for("firmware.show", id=firmware.id)}}">{{firmware.version}}</a> 
+            <a href="{{url_for(".show", id=firmware.id)}}">{{firmware.version}}</a> 
             <span>{{firmware.nodes.count()}} nodes</span>
         </li>
     {% else %}
@@ -43,7 +43,7 @@
     <ul class="list-group">
     {% for firmware in otherFirmwares %}
         <li class="list-group-item">
-            <a href="{{ url_for("firmware.show", id=firmware.id) }}">{{firmware.version}}</a>
+            <a href="{{ url_for(".show", id=firmware.id) }}">{{firmware.version}}</a>
         </li>
     {% else %}
         <li class="list-group-item"><em>No other firmwares found</em></li>

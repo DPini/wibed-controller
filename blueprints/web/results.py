@@ -13,7 +13,7 @@ from database import db
 from models.node import Node
 from models.execution import Execution
 
-bpResults = Blueprint("results", __name__, template_folder="../templates")
+bpResults = Blueprint("web.results", __name__, template_folder="../templates")
 
 @bpResults.route("/")
 def index():

@@ -16,8 +16,14 @@ bpAdmin = Blueprint("web.admin", __name__, template_folder="../templates")
 def index():
     commands = Command.query.filter(Command.experimentId == None).all()
 
+    # Example how to use get_nodes
+    #availNodes = get_nodes("Node.available == True")
+    # Show available nodes and also those in error state so you can run
+    # commands to them
+    tempNodes = get_nodes(None)
+    nodes = [node for node in tempNodes if (node.available == True or node.status.name == "ERROR")]
     return render_template("admin/index.html", commands=commands,\
-			nodes=get_nodes("Node.available == True"))
+			nodes=nodes)
 
 
 @bpAdmin.route("/delCom")

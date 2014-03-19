@@ -77,6 +77,9 @@ def create_app(config_object="settings.DevelopmentConfig"):
     app.register_blueprint(bpResultsAPI, url_prefix="/api")
     
     # User API
+    
+    from blueprints.userapi.nodeinfoapi import bpNodeInfoAPI
+    app.register_blueprint(bpNodeInfoAPI, url_prefix="/api")
 
     from blueprints.userapi.commandapi import bpCommandAPI
     app.register_blueprint(bpCommandAPI, url_prefix="/api")
@@ -119,7 +122,7 @@ def create_app(config_object="settings.DevelopmentConfig"):
 	    logging.debug("BLUEPRINT: %s",request.endpoint)
 	    #Guarantee that only logged in users have access to the services
 	    if 'user' not in session:
-		    if not request.endpoint or (("nodeAPI" not in request.endpoint) and request.endpoint not in ['login','static', 'bpRepo.autoindex', '__autoindex__.static', 'bpRepo.silkicon']) :
+		    if not request.endpoint or (("nodeAPI" not in request.endpoint) and ("userAPI" not in request.endpoint) and request.endpoint not in ['login','static', 'bpRepo.autoindex', '__autoindex__.static', 'bpRepo.silkicon']) :
 			    flash("Not logged in")
 			    return redirect(url_for('login'))
 		    

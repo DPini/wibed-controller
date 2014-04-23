@@ -7,6 +7,7 @@ from flask import request, render_template, flash, redirect, \
 from database import db
 from models.node import Node
 from models.execution import Execution
+from models.command import Command
 
 from restrictions import get_nodes
 
@@ -74,4 +75,34 @@ def description(id):
 	    db.session.commit()
     return render_template("node/show.html", node=node)
     
+@bpNode.route("/coords/<id>", methods=['POST'])
+def coords(id):
+    node = Node.query.get_or_404(id)
+    coordx = request.form["coordx"]
+    coordy = request.form["coordy"]
+    coordz = request.form["coordz"]
+    if is_number(coordx) and is_number(coordy) and is_number(coordz) :
+	    try:
+	    	node.coordx = coordx
+	    	node.coordy = coordy
+	    	node.coordz = coordz
+		cmd = "wibed-location "+coordx+" "+coordy+" "+coordz
+		command = Command(cmd, None, [node])
+	    	db.session.add(command)
+	    	flash("Node info will be updated")
+	    	db.session.commit()
+	    except Exception as e:
+		    db.session.rollback()
+		    flash("Error updating node: %s" % (str(e))) 
+    else:
+	    flash("Incorrect inserted coordinates")
+    return render_template("node/show.html", node=node)
 
+def is_number(s):
+	try:
+		float(s)
+		return True
+	# ValueError check if the input is number
+	# TypeError checks if there is an input
+	except ValueError, TypeError:
+		return False

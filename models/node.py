@@ -24,6 +24,9 @@ class Node(db.Model):
     upgradeId = db.Column(db.Integer, db.ForeignKey("upgrade.id"))
     show = db.Column(db.Boolean, default=False)
     description = db.Column(db.Text)
+    coordx = db.Column(db.String(64))
+    coordy = db.Column(db.String(64))
+    coordz = db.Column(db.String(64))
 
     activeExperiment = db.relationship("Experiment")
     activeUpgrade = db.relationship("Upgrade")

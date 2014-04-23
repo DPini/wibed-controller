@@ -83,6 +83,13 @@ def updateNode(node, input):
             db.session.add(firmware)
 
         node.installedFirmware = firmware
+    
+    if "coordx" in input:
+	    node.coordx = input["coordx"]
+    if "coordy" in input:
+	    node.coordy = input["coordy"]
+    if "coordz" in input:
+	    node.coordz = input["coordz"]
 
     node.lastContact = datetime.now()
     node.status = input["status"]

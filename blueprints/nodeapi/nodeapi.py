@@ -188,7 +188,7 @@ def handleCommands(node, input, output):
 
         commandsToSend.append(command)
 
-    if node.status in [Node.Status.IDLE, Node.Status.RUNNING]:
+    if node.status in [Node.Status.IDLE, Node.Status.RUNNING, Node.Status.ERROR]:
         if len(commandsToSend) > 0:
             output["commands"] = \
                     {c.id: c.command for c in commandsToSend}

@@ -90,6 +90,11 @@ def updateNode(node, input):
 	    node.coordy = input["coordy"]
     if "coordz" in input:
 	    node.coordz = input["coordz"]
+    if "testbed" in input:
+	    node.testbed = input["testbed"]
+    if "gateway" in input:
+	    if input["gateway"] == "1":
+	    	node.testbed = True
 
     node.lastContact = datetime.now()
     node.status = input["status"]

@@ -59,6 +59,9 @@ def create_app(config_object="settings.DevelopmentConfig"):
 
     from blueprints.web.repo import bpRepo
     app.register_blueprint(bpRepo, url_prefix="/wibed")
+
+    from blueprints.web.dirres import bpDirRes
+    app.register_blueprint(bpDirRes, url_prefix="/resultsdir")
     
     	#DB debug page
     if app.debug :
@@ -122,7 +125,7 @@ def create_app(config_object="settings.DevelopmentConfig"):
 	    logging.debug("BLUEPRINT: %s",request.endpoint)
 	    #Guarantee that only logged in users have access to the services
 	    if 'user' not in session:
-		    if not request.endpoint or (("nodeAPI" not in request.endpoint) and ("userAPI" not in request.endpoint) and request.endpoint not in ['login','static', 'bpRepo.autoindex', '__autoindex__.static', 'bpRepo.silkicon']) :
+		    if not request.endpoint or (("nodeAPI" not in request.endpoint) and ("userAPI" not in request.endpoint) and request.endpoint not in ['login','static', 'bpRepo.autoindex', '__autoindex__.static', 'bpRepo.silkicon', 'bpDirRes.autoindex','bpDirRes.silkicon']) :
 			    flash("Not logged in")
 			    return redirect(url_for('login'))
 		    

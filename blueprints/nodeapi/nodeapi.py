@@ -94,7 +94,7 @@ def updateNode(node, input):
 	    node.testbed = input["testbed"]
     if "gateway" in input:
 	    if input["gateway"] == "1":
-	    	node.testbed = True
+	    	node.gateway = True
 
     node.lastContact = datetime.now()
     node.status = input["status"]

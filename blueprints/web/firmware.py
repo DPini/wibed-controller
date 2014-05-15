@@ -127,10 +127,13 @@ def show(id):
     nodesUpgraded = Node.query.filter(Node.firmwareId == id).all()
     nodesUpgrading = Node.query.join(Upgrade).filter(Upgrade.firmwareId == id).all()
     upgradeOrders = [o for o in firmware.upgradeOrders]
+    
+    # If hash is none then the firm file does not exist
+    firmExists = True if firmware.hash else False
 
     return render_template("firmware/show.html", firmware=firmware,\
             upgradeOrders=upgradeOrders, nodesUpgraded=nodesUpgraded,
-            nodesUpgrading=nodesUpgrading)
+            nodesUpgrading=nodesUpgrading, firmExists = firmExists)
 
 
 
@@ -150,3 +153,47 @@ def delete(id):
 	db.session.commit()
 	return redirect(url_for(".list"))
 	
+@bpFirmware.route("/readd/<id>", methods=["GET", "POST"])
+def readd(id):
+    firmware = Firmware.query.get_or_404(id)
+    version = firmware.version
+    try:
+        firmwareFile = None
+        try:
+            firmwareFile = request.files["firmware"]
+	    # Check if version is included in filename
+	    if not version in firmwareFile.filename:
+		    flash("Please make sure that the version typed has a corresponding "
+		    	   +"commit in the git repo (first 8 digits of commit tag)."
+			   +" To prevent vague mistakes we allow to upload only "
+			   +"firmwares with filenames that include the version "
+			   +"number entered (firmwares from server repo already do).")
+		    return redirect(url_for(".list"))
+            firmwareFileName = secure_filename(version)
+            firmwareHash = md5(firmwareFile.read()).hexdigest()
+            firmwareFile.seek(0)
+            firmwareFile.save(os.path.join(app.config["FIRMWARE_DIR"], 
+                firmwareFileName))
+        except KeyError:
+            raise Exception("Invalid firmware uploaded")
+        
+        hashUploaded = None
+
+        try:
+	     hashUploaded = request.form['hash'].strip()
+	     logging.debug("File hash: %s", firmwareHash)
+	     logging.debug("Uploaded hash: %s", hashUploaded)
+	     if firmwareHash != hashUploaded :
+	     	flash("File has wrong hash")
+		return redirect(url_for(".list"))
+	except KeyError:
+            raise Exception("Error validating checksum")
+
+        firmware.hash = firmwareHash
+        db.session.commit()
+        flash("Firmware file '%s' added successfully" % version)
+        return redirect(url_for(".list"))
+    except Exception as e:
+        db.session.rollback()
+        flash("Failed to add firmware file: %s" % str(e))
+        return redirect(url_for(".list"))

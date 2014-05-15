@@ -1,6 +1,7 @@
 """ Testbed experiment-related functionality. """
 
 import os
+import re
 
 import logging
 
@@ -113,6 +114,30 @@ def finish(id):
     experiment = Experiment.query.get_or_404(id)
     experiment.finish()
     return redirect(url_for(".show", id=id))
+
+
+@bpExperiment.route("/repeat/<id>")
+def repeat(id):
+    experiment = Experiment.query.get_or_404(id)
+    # Search to modify the name properly (ending in *.RepNo)
+    match = re.match(r'(.+\.)(\d+)',experiment.name)
+    # If already a similar ending cause of older repeats or
+    # randomly
+    if match:
+	repExpName = match.group(1) + str(int(match.group(2))+1)
+    # For sure the first repeat	    
+    else:
+	repExpName = experiment.name + ".1"
+    repExp = Experiment(repExpName,experiment.overlay, experiment.nodes)
+    try:	
+    	db.session.add(repExp)
+    	db.session.commit()
+    	flash("Experiment '%s' added successfully" % repExpName)
+    	return redirect(url_for(".show", id=repExp.id))
+    except Exception as e:
+	db.session.rollback()
+    	flash("Failed to add experiment '%s'" % repExpName)
+	return redirect(url_for(".show", id=id))
 
 @bpExperiment.route("/show/<id>")
 def show(id):

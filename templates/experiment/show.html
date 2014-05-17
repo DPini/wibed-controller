@@ -12,7 +12,7 @@
       {% endif %}
       {% if experiment.status == Experiment.Status.FINISHED %}
       <a class="btn btn-danger" href="{{url_for(".remove", id=experiment.id)}}">Remove</a>
-      <a class="btn btn-success" href="{{url_for(".repeat", id=experiment.id)}}">Repeat</a>
+      <a class="btn btn-success" href="{{url_for(".repeat", id=experiment.id)}}">Repeat (only with IDLE nodes)</a>
       {% endif %}
     </div>
   </div>

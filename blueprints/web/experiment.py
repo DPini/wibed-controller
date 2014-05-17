@@ -130,6 +130,10 @@ def repeat(id):
 	repExpName = experiment.name + ".1"
     repExp = Experiment(repExpName,experiment.overlay, experiment.nodes)
     try:	
+	repNodes = [i for i in experiment.nodes if i.available]
+	if not repNodes:
+		flash("No node is ready to repeat the experiment")
+		return redirect(url_for(".show", id=id))
     	db.session.add(repExp)
     	db.session.commit()
     	flash("Experiment '%s' added successfully" % repExpName)

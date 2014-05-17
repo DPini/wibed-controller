@@ -36,7 +36,6 @@ def saveFile(nodeId):
 				expName = exp.name+"_"+str(exp.creationTime)
 				expName=expName.replace(" ","_")
 				expName=expName.replace(":","-")
-				expName=(expName.split("."))[0]
 				logging.debug("The name of the experiment file is: %s", expName)
 				# Create experiment dir if it does not exist
 				newDir = os.path.join(app.config["RESULTS_DIR"],expName)

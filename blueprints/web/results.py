@@ -1,6 +1,7 @@
 """ Testbed node-related functionality. """
 
 import os
+import re
 
 import logging
 
@@ -33,8 +34,9 @@ def list_exp(exp):
     files = [ f for f in os.listdir(expDir) ]
     logging.debug(files)
     files = filter(lambda x : os.path.isfile(expDir + "/" + x) ,files)
-    files = map(lambda x: {"dir" :(x.split("."))[0], "file":x},files)
-    logging.debug("The save files are: %s", files)
+    logging.debug("1)The save files are: %s", files)
+    files = map(lambda x: {"dir" :re.sub('\.tar\.gz$','',x), "file":x},files)
+    logging.debug("2)The save files are: %s", files)
     return render_template("results/list_exp.html", files=files, expDir=exp)
 
 @bpResults.route("/<expDir>/<filename>")

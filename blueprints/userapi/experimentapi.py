@@ -3,18 +3,36 @@
 from flask import Blueprint, jsonify
 from models.experiment import Experiment
 from blueprints.userapi.commandapi import commandExecutions
+import logging
 
 bpExperimentAPI = Blueprint("userAPI.experiment", __name__, template_folder="../templates")
 
-@bpExperimentAPI.route("/experimentInfo/<id>", methods=["GET"])
-def experimentInfo(id):
-    experiment = Experiment.query.get(id)
+@bpExperimentAPI.route("/experimentInfo/<name>", methods=["GET"])
+def experimentInfo(name):
+    experiment = Experiment.query.filter_by(name=name).first()
     if experiment:
+    	nodes = experiment.nodes
+	resultName = name+"_"+str(experiment.creationTime)
+	resultName = resultName.replace(" ","_")
+	resultName = resultName.replace(":","-")
         output = {
-            experiment.id: {
+            	"id": experiment.id,
                 "nodes": [node.id for node in experiment.nodes],
-                "commands": [command.id for command in experiment.commands]
+                "commands": [command.id for command in experiment.commands],
+		"resultdir": resultName
                 }
+        return jsonify(output)
+
+    else:
+        return jsonify({"error": "wrong ID"})
+
+@bpExperimentAPI.route("/experimentNodes/<name>", methods=["GET"])
+def experimentNodes(name):
+    experiment = Experiment.query.filter_by(name=name).first()
+    if experiment:
+    	nodes = experiment.nodes
+        output = {
+                "nodes": [node.id for node in experiment.nodes],
             }
         return jsonify(output)
 

@@ -7,6 +7,7 @@ class Config:
     FIRMWARE_DIR = "static/firmwares"
     RESULTS_DIR = "static/results"
     ERROR_DIR = "static/error"
+    JS_DIR = "static/js"
     REACHABLE_WINDOW = 180 ## number of seconds after which a node that hasn't
                            ## made contact is shown as unreachable
 

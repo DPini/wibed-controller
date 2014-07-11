@@ -36,15 +36,17 @@
           	<li><a href="{{url_for("web.node.list")}}">Nodes</a></li>
 		<li><a href="{{url_for("web.results.list")}}">Results</a></li>
           	<li><a href="{{url_for("web.admin.index")}}">Admin</a></li>
-		<li><a href="{{url_for("index")}}wibed/">Repo</a></li>
 		<li><a href="{{url_for("web.error.list")}}">Errors</a></li>
+		<li><a href="{{url_for("web.topology.index")}}">Topology</a></li>
+		<li><a href="{{url_for("index")}}wibed/">Repo</a></li>
 	  {% elif session.user=="admin" %}
           	<li><a href="{{url_for("web.admin.index")}}">Admin</a></li>
 		<li><a href="{{url_for("web.node.list")}}">Nodes</a></li>
 	  	<li><a href="{{url_for("web.firmware.list")}}">Firmwares</a></li>
           	<li><a href="{{url_for("web.dbdebug.list")}}">dbDebug</a></li>
-		<li><a href="{{url_for("index")}}wibed/">Repo</a></li>
 		<li><a href="{{url_for("web.error.list")}}">Errors</a></li>
+		<li><a href="{{url_for("web.topology.index")}}">Topology</a></li>
+		<li><a href="{{url_for("index")}}wibed/">Repo</a></li>
 	  {% endif  %}
 	  {% if session.user %}
 		<li style="color:#999">  User: {{ session.user }}    </li>

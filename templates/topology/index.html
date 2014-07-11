@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h3>Topology Graph</h3>
+    <div class="well">
+    	<div class="btn-group">
+      	<a class="btn btn-warning" href="{{url_for(".getresults")}}">Redraw</a>
+	Warning: This should only be used only when a new WibedTopology experiment is performed
+	</div>
+    </div>
+
+    <div id="mynetwork"></div>
+    <link href="../static/css/vis.css" rel="stylesheet" type="text/css" />
+    <script src="../static/js/vis.js"></script>
+    <script src="../static/js/topo.js"></script>
+    <script type="text/javascript">
+  // create a network
+  var container = document.getElementById('mynetwork');
+  var data= {
+    nodes: nodes,
+    edges: edges,
+  };
+  console.debug(data)
+  var options = {
+    physics: {
+	barnesHut: {
+		gravitationalConstant: -20000, 
+		centralGravity: 0, 
+		springLength: 405, 
+		springConstant: 0.08
+	}
+    },
+    width: '600px',
+    height: '600px',
+    nodes: {
+	shape: 'circle',
+    },
+    edges: {
+	style: "arrow",
+	arrowScaleFactor: 0.1,
+    }
+  };
+  var network = new vis.Network(container, data, options);
+</script> 
+{% endblock %}

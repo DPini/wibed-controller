@@ -63,6 +63,9 @@ def create_app(config_object="settings.DevelopmentConfig"):
     from blueprints.web.dirres import bpDirRes
     app.register_blueprint(bpDirRes, url_prefix="/resultsdir")
     
+    from blueprints.web.topology import bpTopology
+    app.register_blueprint(bpTopology, url_prefix="/topology")
+    
     	#DB debug page
     if app.debug :
 	    from blueprints.web.dbdebug import bpDb
@@ -130,8 +133,8 @@ def create_app(config_object="settings.DevelopmentConfig"):
 			    return redirect(url_for('login'))
 		    
 	    #Associate bluprints with user role
-	    adminBp = ["index", "static", "login", "logout", "firmware","dbdebug","admin", "node", "command", "error"]
-	    userBp = ["index", "static", "login", "logout", "experiment", "node", "results", "admin", "command", "error"]
+	    adminBp = ["index", "static", "login", "logout", "firmware","dbdebug","admin", "node", "command", "error", "topology"]
+	    userBp = ["index", "static", "login", "logout", "experiment", "node", "results", "admin", "command", "error", "topology"]
 
 	    if ('user' in session) and request.endpoint and "nodeAPI" not in request.endpoint:
 		    logging.debug("BLUEPRINT: %s",request.endpoint)

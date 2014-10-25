@@ -28,7 +28,7 @@ def experimentInfo(name):
 
 @bpExperimentAPI.route("/experimentNodes/<name>", methods=["GET"])
 def experimentNodes(name):
-    experiments = Experiment.query.filter((Experiment.name==name) & (Experiment.status==Experiment.Status.RUNNING) ).first()
+    experiment = Experiment.query.filter((Experiment.name==name) & (Experiment.status==Experiment.Status.RUNNING) ).first()
     if experiment:
     	nodes = experiment.nodes
         output = {

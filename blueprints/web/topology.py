@@ -22,12 +22,24 @@ def index():
 	jsTopo = os.path.join(JS,"topo.js")
 	if not os.path.isfile(jsTopo):
 		getData()
-    	return render_template("topology/index.html")
+    	nodes = Node.query.all()
+	nodesDict = {}
+	for node in nodes:
+		nodesDict.update({str(node.id) : {'status' : node.status.name, 'testbed' : node.testbed,'gw' : node.gateway}})
+	nodesDict = json.dumps(nodesDict)
+	logging.debug(nodesDict)
+	return render_template("topology/index.html", nodes=nodesDict)
 
 @bpTopology.route("/getresults")
 def getresults():
 	getData()
-	return render_template("topology/index.html")
+    	nodes = Node.query.all()
+	nodesDict = {}
+	for node in nodes:
+		nodesDict.update({str(node.id) : {'status' : node.status.name, 'testbed' : node.testbed,'gw' : node.gateway}})
+	nodesDict = json.dumps(nodesDict)
+	logging.debug(nodesDict)
+	return render_template("topology/index.html", nodes=nodesDict)
 
 def getData():
 	nodes_js = list()
@@ -39,7 +51,9 @@ def getData():
 	# Create list of nodes in vis.js format
 	nodes = experiment.nodes.all()
 	for node in nodes:
-		node_js= {"id": nodes.index(node), "label":node.id}
+		# Old Id
+		#node_js= {"id": nodes.index(node), "label":node.id}
+		node_js= {"id": node.id, "group":'idle'}
 		nodes_js.append(node_js)
 	logging.debug(nodes_js)
 	
@@ -60,8 +74,11 @@ def getData():
 			tmp = line.rstrip('\n')
 			tmp = tmp.split(',')
 			nodeTo = [n for n in nodes if n.id == tmp[0]][0]
-			toId = nodes.index(nodeTo)
-			edge_js = { "from": nodes.index(node), "to": toId, "value": tmp[1], "label": tmp[1]}
+			# Using New ID
+			#toId = nodes.index(nodeTo)
+			#edge_js = { "from": nodes.index(node), "to": toId, "value": tmp[1], "label": tmp[1]}
+			toId = nodeTo.id
+			edge_js = { "from": node.id, "to": toId, "value": tmp[1], "label": tmp[1]}
 			edges_js.append(edge_js)
 	
 	# Write nodes and edjes in json format in javascript file static/js/topo.js
@@ -77,3 +94,4 @@ def getData():
 		f.write("%s,\n" % json.dumps(item))
 	print>> f, "];"
 	f.close()
+

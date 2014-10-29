@@ -4,41 +4,142 @@
     <div class="well">
     	<div class="btn-group">
       	<a class="btn btn-warning" href="{{url_for(".getresults")}}">Redraw</a>
-	Warning: This should only be used only when a new WibedTopology experiment is performed
+	Warning: This should only be when a new WibedTopology experiment is performed
 	</div>
     </div>
+<div id="overlay"></div>
 
+<div id="popupBox">  
+</div>
     <div id="mynetwork"></div>
     <link href="../static/css/vis.css" rel="stylesheet" type="text/css" />
+    <link href="../static/css/topo.css" rel="stylesheet" type="text/css" />
     <script src="../static/js/vis.js"></script>
     <script src="../static/js/topo.js"></script>
     <script type="text/javascript">
   // create a network
   var container = document.getElementById('mynetwork');
+  var nodesDb = {{ nodes|safe }};
+for (var i = 0; i < nodes.length; i++) {
+	var stat = nodesDb[nodes[i].id].status;
+	var gw = nodesDb[nodes[i].id].gw;
+	if (stat.match("INIT|IDLE")){
+		nodes[i].group = 'IDLE';
+	} else if (stat.match("ERROR")){
+		nodes[i].group = 'ERROR';
+	} else if (stat.match("UPGRADING")){
+		nodes[i].group = 'UPGRADING';
+	} else {
+		nodes[i].group = 'RUN';
+	};
+	if (gw) {
+		nodes[i].group = 'GW';
+	} 
+  };
+  console.log(nodes);
   var data= {
     nodes: nodes,
     edges: edges,
   };
-  console.debug(data)
   var options = {
     physics: {
 	barnesHut: {
-		gravitationalConstant: -20000, 
-		centralGravity: 0, 
+		gravitationalConstant: -18000, 
+		centralGravity: 1.4, 
 		springLength: 405, 
 		springConstant: 0.08
 	}
     },
-    width: '600px',
-    height: '600px',
+    width: '1100px',
+    height: '800px',
     nodes: {
-	shape: 'circle',
+	shape: 'dot',
+	radius: 17,
     },
     edges: {
-	style: "arrow",
+	style: "arrow-center",
 	arrowScaleFactor: 0.1,
-    }
+	color: '#C0C0C0'
+    },
+    groups: {
+	IDLE: {
+	   shape: 'dot', 
+ 	    color: {
+      	         background: '#FFFF33',
+                 border: 'black',
+		 highlight: {
+			background: '#FFFF99'
+		 }
+	   }
+        },
+        RUN: {
+	   shape: 'dot', 
+           color: {
+                 background: '#33FF33',
+                 border: 'black',
+		 highlight: {
+			background: '#99FF99'
+		 }
+	   }
+	},
+        UPGRADE: {
+	   shape: 'dot', 
+           color: {
+                 background: '#3399FF',
+		 border: 'black',
+		 highlight: {
+			background: '#99CCFF'
+		 }
+	   }
+	},
+        ERROR: {
+	   shape: 'dot', 
+           color: {
+                 background: '#FF3333',
+                 border: 'black',
+		 highlight: {
+			background: '#FF9999'
+		 }
+	   }
+	},
+	GW: {
+	   shape: 'star', 
+           color: {
+                 background: '#33FF33',
+                 border: 'black',
+		 highlight: {
+			background: '#99FF99'
+		 }
+	   }
+	},
+    },
+	   
   };
+
   var network = new vis.Network(container, data, options);
+  
+  network.on('select', function (properties) {
+	if (properties.nodes.length  > 0) {
+		console.log(properties.nodes[0]);
+		// Overlay
+		$('#overlay').fadeIn('slow');
+		$('#popupBox').fadeIn('slow');
+		var id = properties.nodes[0];
+		var stat = nodesDb[id].status;
+		var testbed = nodesDb[id].testbed;
+		var gw = nodesDb[id].gw;
+		$('#popupContent').remove();
+		$('#popupBox').append("<div id='popupContent'><p>Id: "+id+"</br>Status: "+stat+"</br>Testbed: "+testbed+"</br>IsGateway: "+gw+"</p><button class='okButton'>Ok</button></div>");
+		$('#popupContent').fadeIn('slow');    
+
+		$('#overlay, .okButton').click(function () {
+			$('#overlay').fadeOut('slow');
+			$('#popupBox').fadeOut('slow');
+    			$('#popupContent').fadeOut('slow');    
+		});
+		
+	}
+
+  });
 </script> 
 {% endblock %}

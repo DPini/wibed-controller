@@ -131,19 +131,19 @@ def create_app(config_object="settings.DevelopmentConfig"):
 		    if not request.endpoint or (("nodeAPI" not in request.endpoint) and ("userAPI" not in request.endpoint) and request.endpoint not in ['login','static', 'bpRepo.autoindex', '__autoindex__.static', 'bpRepo.silkicon', 'bpDirRes.autoindex','bpDirRes.silkicon']) :
 			    flash("Not logged in")
 			    return redirect(url_for('login'))
-		    
-	    #Associate bluprints with user role
-	    adminBp = ["index", "static", "login", "logout", "firmware","dbdebug","admin", "node", "command", "error", "topology"]
-	    userBp = ["index", "static", "login", "logout", "experiment", "node", "results", "admin", "command", "error", "topology"]
-
-	    if ('user' in session) and request.endpoint and "nodeAPI" not in request.endpoint:
-		    logging.debug("BLUEPRINT: %s",request.endpoint)
-		    if session['user'] == "admin" :
-			    if not [bp for bp in adminBp if bp in request.endpoint]  :
-				    abort(401)
 		    else:
-			    if not [bp for bp in userBp if bp in request.endpoint]  :
-				    abort(401)
+			    #Associate bluprints with user role
+	    		    adminBp = ["index", "static", "login", "logout", "firmware","dbdebug","admin", "node", "command", "error", "topology"]
+	    		    userBp = ["index", "static", "login", "logout", "experiment", "node", "results", "admin", "command", "error", "topology"]
+
+	    		    if ('user' in session) and request.endpoint and "nodeAPI" not in request.endpoint:
+				    logging.debug("BLUEPRINT: %s",request.endpoint)
+		    		    if session['user'] == "admin" :
+					    if not [bp for bp in adminBp if bp in request.endpoint]  :
+						    abort(401)
+		    		    else:
+			    		    if not [bp for bp in userBp if bp in request.endpoint]  :
+				                    abort(401)
 
     #Default route
     @app.route("/")

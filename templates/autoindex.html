@@ -1,7 +1,7 @@
-<!doctype html>
-<html>
-<head>
-  <title>Wibed Server</title>
+{% extends '__autoindex__/autoindex.html' %}
+
+{% block meta %}
+  {{ super() }}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="css/bootstrap.min.css") }}"  media="screen">
   <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="css/bootstrap-theme.min.css") }}"  media="screen">
@@ -15,11 +15,29 @@
     .unreachable {
       text-decoration: line-through;
     }
+    a:link {
+	    color: rgb(66, 139, 202);
+	    text-decoration: none;
+    }
+    a:hover, a:focus {
+    		color: rgb(42, 100, 150);
+    		text-decoration: underline;
+    }
+    .logout:visited {
+    		color: rgb(66,139,202);
+    }
+    .logout:hover {
+    		color: rgb(42, 100, 150);
+        
+    }
+    a:visited{
+	color: rgb(51,51,51);
+    }
   </style>
+{% endblock %}
 
-</head>
-<body>
-  <div class="navbar navbar-inverse navbar-fixed-top">
+{% block header %}
+	<div class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -50,7 +68,7 @@
 	  {% endif  %}
 	  {% if session.user %}
 		<li style="color:#999">  User: {{ session.user }}    </li>
-		<span class="navbar-btn"><li><a href="{{url_for("logout")}}">Log Out</a></li>
+		<span class="navbar-btn"><li><a class="logout" href="{{url_for("logout")}}">Log Out</a></li>
 	  {% endif %}
         </ul>
       </div>
@@ -64,12 +82,15 @@
           <div class="alert alert-info">{{ message }}</div>
         {% endfor %}
       </div>
-  	<script src="{{ url_for("static", filename="js/jquery-1.10.2.min.js") }}"></script>
-      {% block body %}{% endblock %}
-    </div>
+     
+      <script src="{{ url_for("static", filename="js/jquery-1.10.2.min.js") }}"></script>
+{% endblock %}
 
+{% block footer %}
+  {{ super() }}
   </div>
-
+  </div>
+  
   <script src="{{ url_for("static", filename="js/bootstrap.min.js") }}"></script>
-</body>
-</html>
+
+{% endblock %}

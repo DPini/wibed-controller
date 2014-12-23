@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask.ext.autoindex import AutoIndexBlueprint
 
 bpResults = Blueprint("web.results",__name__, template_folder="../../templates")
-idx=AutoIndexBlueprint(bpResults, browse_root='/home/manos/wibed-controller/static/results', add_url_rules=False)
+idx=AutoIndexBlueprint(bpResults, browse_root='/opt/wibed-controller/static/results/', add_url_rules=False)
 
 
 @bpResults.route('/',defaults={'path': ''})

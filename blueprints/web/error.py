@@ -2,7 +2,7 @@ from flask import Blueprint, current_app as app
 from flask.ext.autoindex import AutoIndexBlueprint
 
 bpError = Blueprint("web.error",__name__, template_folder="../../templates")
-idx=AutoIndexBlueprint(bpError, browse_root="/home/manos/wibed-controller/static/error", add_url_rules=False)
+idx=AutoIndexBlueprint(bpError, browse_root="/opt/wibed-controller/static/error/", add_url_rules=False)
 
 
 @bpError.route('/',defaults={'path': ''})

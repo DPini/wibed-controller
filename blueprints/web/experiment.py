@@ -128,19 +128,19 @@ def repeat(id):
     # For sure the first repeat	    
     else:
 	repExpName = experiment.name + ".1"
-    repExp = Experiment(repExpName,experiment.overlay, experiment.nodes)
     try:	
 	repNodes = [i for i in experiment.nodes if i.available]
 	if not repNodes:
 		flash("No node is ready to repeat the experiment")
 		return redirect(url_for(".show", id=id))
+    	repExp = Experiment(repExpName,experiment.overlay, repNodes)
     	db.session.add(repExp)
     	db.session.commit()
     	flash("Experiment '%s' added successfully" % repExpName)
     	return redirect(url_for(".show", id=repExp.id))
     except Exception as e:
 	db.session.rollback()
-    	flash("Failed to add experiment '%s'" % repExpName)
+    	flash("Failed to add experiment '%s' %s" % (repExpName,str(e)))
 	return redirect(url_for(".show", id=id))
 
 @bpExperiment.route("/show/<id>")

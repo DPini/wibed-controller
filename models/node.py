@@ -29,6 +29,8 @@ class Node(db.Model):
     coordx = db.Column(db.String(64))
     coordy = db.Column(db.String(64))
     coordz = db.Column(db.String(64))
+    address = db.Column(db.String(17))
+    gwaddress = db.Column(db.String(17))
 
     activeExperiment = db.relationship("Experiment")
     activeUpgrade = db.relationship("Upgrade")

@@ -95,7 +95,14 @@ def updateNode(node, input):
     if "gateway" in input:
 	    if input["gateway"] == "1":
 	    	node.gateway = True
-
+    if "address" in input:
+	    node.address = input["address"]
+    if "gwaddress" in input:
+	    if input["gwaddress"] != "": 
+	    	node.gwaddress = input["gwaddress"]
+	    else:
+		node.gwaddress = "N/A"
+    
     node.lastContact = datetime.now()
     node.status = input["status"]
     db.session.commit()

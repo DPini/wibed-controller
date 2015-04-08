@@ -16,6 +16,12 @@
             <strong>Model:</strong> {{node.model}}
         </li>
         <li>
+            <strong>Node MAC address:</strong> {{node.address}}
+        </li>
+        <li>
+            <strong>Gateway MAC address:</strong> {{node.gwaddress}}
+        </li>
+        <li>
             <strong>Version:</strong> 
             {% if node.installedFirmware %}
                 {{node.installedFirmware.version}}

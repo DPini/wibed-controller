@@ -22,7 +22,7 @@ class Node(db.Model):
     lastContact = db.Column(db.DateTime)
     experimentId = db.Column(db.Integer, db.ForeignKey("experiment.id"))
     upgradeId = db.Column(db.Integer, db.ForeignKey("upgrade.id"))
-    show = db.Column(db.Boolean, default=False)
+    show = db.Column(db.Boolean, default=True)
     description = db.Column(db.Text)
     testbed = db.Column(db.Text)
     gateway = db.Column(db.Boolean, default=False)

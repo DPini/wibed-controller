@@ -95,6 +95,7 @@ def updateNode(node, input):
     if "gateway" in input:
 	    if input["gateway"] == "1":
 	    	node.gateway = True
+		node.show = False
     if "address" in input:
 	    node.address = input["address"]
     if "gwaddress" in input:

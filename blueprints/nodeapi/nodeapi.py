@@ -172,11 +172,34 @@ def handleFirmwareUpgrade(node, input, output):
 	            db.session.commit()
 
 def handleCommands(node, input, output):
-    activeExperiment = node.activeExperiment
-    logging.debug('Active experiment? %s', activeExperiment)
+    if node.status in [Node.Status.IDLE, Node.Status.RUNNING, Node.Status.ERROR]:
+    	activeExperiment = node.activeExperiment
+    	logging.debug('Active experiment? %s', activeExperiment)
 
-    commandAck = input.get("commandAck", 0)
-    missingCommands = (
+    	# if commandAck does not exist in the node it means it is a fresh installation
+	# or a hard reset
+	commandAck = input.get("commandAck", 0)
+	last_execution = (node.executions.order_by(Execution.commandId.desc()).first())
+	resultAck = 0 if last_execution is None else last_execution.commandId 
+	if not commandAck and resultAck:
+		if activeExperiment :
+			#If in experiment we want node to reexecute all commands since
+			#the beggining of the experiment
+			#Delete the executions of Experiment commands
+                	executions = node.executions().order_by(Execution.commandId.asc())
+			newResultAck = executions[0].commandId
+			for execution in executions
+	 			if activeExperiment.id != execution.command.experimentId :
+					db.session.delete(execution)
+                	db.session.commit()
+			commandAck = newResultAck
+		else: 
+			#If not in experiment we don't want the node to execute previous
+		      	#previous commands
+			commandAck = resultAck
+
+
+    	missingCommands = (
                 db.session.query(Command)
                 .join(Command.nodes)     # It's  necessary to join the "children" of
                                          #Command
@@ -186,28 +209,29 @@ def handleCommands(node, input, output):
                 .filter(Node.id == node.id) 
         )
 
-    commandsToSend = []
+    	commandsToSend = []
 
-    for command in missingCommands:
-        if command.experiment is not None: 
-            # If command is associated with an old experiment, ignore.
-            if not activeExperiment or \
-                activeExperiment.id != command.experiment.id:
-                continue
-            # If it is associated with a experiment which is still not
-            # running, ignore too.
-            elif command.experiment.status != Experiment.Status.RUNNING:
-                continue
+    	for command in missingCommands:
+        	if command.experiment is not None: 
+            	# If command is associated with an old experiment, ignore.
+            		if not activeExperiment or \
+                		activeExperiment.id != command.experiment.id:
+                		continue
+            		# If it is associated with a experiment which is still not
+            		# running, ignore too.
+            		elif command.experiment.status != Experiment.Status.RUNNING:
+                		continue
 
-        commandsToSend.append(command)
+        	commandsToSend.append(command)
 
-    if node.status in [Node.Status.IDLE, Node.Status.RUNNING, Node.Status.ERROR]:
         if len(commandsToSend) > 0:
-            output["commands"] = \
-                    {c.id: c.command for c in commandsToSend}
-        # Check and add results provided by node
+            	output["commands"] = \
+                    	{c.id: c.command for c in commandsToSend}
+        	# Check and add results provided by node
         handleResults(node, input, output)
 
+# handleResults is called from inside handleCommands and thus only if the
+# node is on IDLE, RUNNING or ERROR state
 def handleResults(node, input, output):
     results = input.get("results", [])
 

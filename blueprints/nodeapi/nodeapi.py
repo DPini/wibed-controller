@@ -181,18 +181,18 @@ def handleCommands(node, input, output):
 	commandAck = input.get("commandAck", 0)
 	last_execution = (node.executions.order_by(Execution.commandId.desc()).first())
 	resultAck = 0 if last_execution is None else last_execution.commandId 
-	if not commandAck and resultAck:
+	if (not commandAck) and resultAck:
 		if activeExperiment :
 			#If in experiment we want node to reexecute all commands since
 			#the beggining of the experiment
 			#Delete the executions of Experiment commands
-                	executions = node.executions().order_by(Execution.commandId.asc())
-			newResultAck = executions[0].commandId
-			for execution in executions
-	 			if activeExperiment.id != execution.command.experimentId :
+                	expCommands = node.commands.filter_by(experimentId=activeExperiment.id)\
+					.order_by(Command.id.asc())
+			commandAck = expCommands[0].id - 1
+			for execution in node.executions:
+	 			if activeExperiment.id == execution.command.experimentId :
 					db.session.delete(execution)
                 	db.session.commit()
-			commandAck = newResultAck
 		else: 
 			#If not in experiment we don't want the node to execute previous
 		      	#previous commands
@@ -221,7 +221,8 @@ def handleCommands(node, input, output):
             		# running, ignore too.
             		elif command.experiment.status != Experiment.Status.RUNNING:
                 		continue
-
+			if node.status != Node.Status.RUNNING :
+				continue
         	commandsToSend.append(command)
 
         if len(commandsToSend) > 0:

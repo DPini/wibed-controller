@@ -12,6 +12,7 @@ from models.experiment import Experiment
 from models.command import Command
 from models.execution import Execution
 from models.firmware import Firmware
+from models.restore import Restore
 
 bpNodeAPI = Blueprint("nodeAPI.node", __name__, template_folder="../templates")
 
@@ -45,6 +46,8 @@ def wibednode(id):
         handleFirmwareUpgrade(node, input, output)
 
         handleCommands(node, input, output)
+
+	handleSendRestore(node, input, output)
 
     except Exception as e:
         logging.debug('Exception joining node: %s', e)
@@ -248,3 +251,38 @@ def handleResults(node, input, output):
 
     if lastNodeExecution:
         output["resultAck"] = lastNodeExecution.commandId
+
+def handleSendRestore(node, input, output):
+     """ 
+     Send reset message to another node
+     """
+     # Check if this value is not updated
+     restore = node.source_restore
+     logging.debug("RESTORE:  %s", restore)
+     if restore:
+	restore = restore[0]
+        if restore.status == Restore.Status.IDLE:
+	   logging.debug("RESTORE: Will now sent 'sendRestore' Message with reset %s", restore.reset)
+           output["sendRestore"] = {}
+           output["sendRestore"]["dest"] = restore.dest_id
+           output["sendRestore"]["reset"] = restore.reset
+           restore.start()
+           db.session.commit()
+        # ADD SENDRESET to model 
+        elif "sendRestore" in input:
+           if restore.status == Restore.Status.SENDRESTORE and input["sendRestore"] == "GWACK":
+              restore.toRestore()
+              db.session.commit()
+           # The Ack from the node may come earlier than the next wibed-node execution while
+           # the server still considers the reset in SENDRESET state, ommiting like that
+           # GWACK
+           elif restore.status in (Restore.Status.RESTORING,Restore.Status.SENDRESTORE) and input["sendRestore"] == "NODEACK":
+	      logging.debug("RESTORE: RESTORING -> CLOSED")
+              try:
+                 db.session.delete(restore)
+                 db.session.commit()
+              except Exception, e:
+                 logging.debug("Error removing Restore: %s" % e)
+     	logging.debug("RESTORE:  %s", restore)
+			
+

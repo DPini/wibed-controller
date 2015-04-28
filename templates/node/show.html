@@ -11,6 +11,17 @@
       	{% endif  %}
     </div>
     {% endif %}
+    {% if not node.reachable %}
+    <div class="well">  
+		{% if not node.dest_restore %} 
+		 <a class="btn btn-default" href={{url_for(".restore", id=node.id, reset="0")}}>Reboot</a>
+		 <a class="btn btn-default" href={{url_for(".restore", id=node.id, reset="1")}}>Reset</a>
+		 If restored recently wait until the node connects again. A reboot should take around 60 seconds while a reboot arround 200 seconds (depending always on the connectivity and node)
+		 {% else %} 
+			<strong>Node is being restored...</strong>
+		{% endif %}
+    </div>
+    {% endif  %}
     <ul>
         <li>
             <strong>Model:</strong> {{node.model}}
@@ -19,7 +30,7 @@
             <strong>Node MAC address:</strong> {{node.address}}
         </li>
         <li>
-            <strong>Gateway MAC address:</strong> {{node.gwaddress}}
+	     <strong>Gateway MAC address:</strong> {{node.gwaddress}}
         </li>
         <li>
             <strong>Version:</strong> 

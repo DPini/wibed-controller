@@ -1,5 +1,7 @@
 """ Testbed node-related functionality. """
 
+import logging
+
 from flask import Blueprint
 from flask import request, render_template, flash, redirect, \
                   url_for, session
@@ -8,6 +10,7 @@ from database import db
 from models.node import Node
 from models.execution import Execution
 from models.command import Command
+from models.restore import Restore
 
 from restrictions import get_nodes
 
@@ -97,6 +100,21 @@ def coords(id):
     else:
 	    flash("Incorrect inserted coordinates")
     return render_template("node/show.html", node=node)
+
+@bpNode.route("/reset/<id>_<reset>")
+def restore(id, reset):
+	node = Node.query.get_or_404(id)
+    	restore = Restore.query.get(id)
+	if not restore:
+		try:
+			restore = Restore(node, int(reset))           
+           		db.session.add(restore)
+			db.session.commit()
+           		flash("Restore event Added")
+	    	except Exception as e:
+           		flash("Error initiating restore: %s"% (str(e)))
+        		return redirect(url_for(".show", id=node.id))
+        return redirect(url_for(".show", id=node.id))
 
 def is_number(s):
 	try:

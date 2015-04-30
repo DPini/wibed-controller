@@ -16,7 +16,7 @@
 		{% if not node.dest_restore %} 
 		 <a class="btn btn-default" href={{url_for(".restore", id=node.id, reset="0")}}>Reboot</a>
 		 <a class="btn btn-default" href={{url_for(".restore", id=node.id, reset="1")}}>Reset</a>
-		 If restored recently wait until the node connects again. A reboot should take around 60 seconds while a reboot arround 200 seconds (depending always on the connectivity and node)
+		 If restored recently wait until the node connects again. A reboot should take around 60 seconds while a reset arround 200 seconds (depending always on the connectivity and node)
 		 {% else %} 
 			<strong>Node is being restored...</strong>
 		{% endif %}

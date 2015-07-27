@@ -33,7 +33,7 @@
 			</div>
                 {% for node in freeNodes %}
                   <div class="checkbox col-sm-2">
-                    <input type="checkbox" name="nodeIds" id="node_{{node.id}}" value="{{ node.id }}" />
+                    <input class="node" type="checkbox" name="nodeIds" id="node_{{node.id}}" value="{{ node.id }}" />
                     <label for="node_{{node.id}}">{{node.id}}</label>
                   </div>
                 {% else %}

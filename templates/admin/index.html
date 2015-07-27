@@ -20,7 +20,7 @@
 			</div>
                 {% for node in nodes %}
                 <div class="checkbox col-sm-4">
-                  <input type="checkbox" name="nodeIds" id="node_{{node.id}}" value="{{ node.id }}" />
+                  <input class="node" type="checkbox" name="nodeIds" id="node_{{node.id}}" value="{{ node.id }}" />
 		              <label for="node_{{node.id}}">{{node.id}} - {{node.testbed}}  - {{node.status.name | capitalize}}</label>
                 </div>
                 {% else %}

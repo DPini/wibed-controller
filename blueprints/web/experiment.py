@@ -42,7 +42,9 @@ def list():
 def add():
     if request.method == "GET":
         overlays = enumerate(sorted(os.listdir(app.config["OVERLAY_DIR"])))
-        return render_template("experiment/add.html", freeNodes=get_nodes("Node.available == True"), 
+	nodes = get_nodes(None)
+	freeNodes = [node for node in nodes if (node.reachable == True and node.available == True)]
+        return render_template("experiment/add.html", freeNodes=freeNodes, 
                 overlays=overlays)
     elif request.method == "POST":
         try:

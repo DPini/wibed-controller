@@ -21,7 +21,7 @@ def index():
     # Show available nodes and also those in error state so you can run
     # commands to them
     tempNodes = get_nodes(None)
-    nodes = [node for node in tempNodes if (node.available == True or node.status.name == "ERROR")]
+    nodes = [node for node in tempNodes if (node.reachable == True and (node.available == True or node.status.name == "ERROR"))]
     return render_template("admin/index.html", commands=commands,\
 			nodes=nodes)
 

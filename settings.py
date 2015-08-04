@@ -8,6 +8,7 @@ class Config:
     RESULTS_DIR = "static/results"
     ERROR_DIR = "static/error"
     JS_DIR = "static/js"
+    LOG_DIR = "log"
     REACHABLE_WINDOW = 180 ## number of seconds after which a node that hasn't
                            ## made contact is shown as unreachable
 

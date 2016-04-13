@@ -23,8 +23,8 @@ class Restore(db.Model):
         # Alternatively nodes could have dest_id and source_id as primary
         # keys or both unique where nodes can have one reset per GW but
         # this is complicated to handle
-	dest_id = db.Column(db.String(64), db.ForeignKey('node.id'), primary_key=True)
-	source_id = db.Column(db.String(64), db.ForeignKey('node.id'))
+	dest_id = db.Column(db.String(64), db.ForeignKey('node.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key=True)
+        source_id = db.Column(db.String(64), db.ForeignKey('node.id', onupdate="CASCADE", ondelete="CASCADE"))
 	status = db.Column(DatabaseEnum(Status, *[e.name for e in Status]))
 	reset = db.Column(db.Boolean) 
 	

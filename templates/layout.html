@@ -38,6 +38,7 @@
           	<li><a href="{{url_for("web.admin.index")}}">Admin</a></li>
 		<li><a href="{{url_for("web.error.autoindex")}}">Errors</a></li>
 		<li><a href="{{url_for("web.topology.index")}}">Topology</a></li>
+		<li><a href="{{url_for("web.overlays.autoindex")}}">Overlays</a></li>
 		<li><a href="{{url_for("web.repo.autoindex")}}">Repo</a></li>
 	  {% elif session.user=="admin" %}
 		<li><a href="{{url_for("web.node.list")}}">Nodes</a></li>
@@ -46,6 +47,7 @@
 		<li><a href="{{url_for("web.topology.index")}}">Topology</a></li>
 	  	<li><a href="{{url_for("web.firmware.list")}}">Firmwares</a></li>
           	<li><a href="{{url_for("web.dbdebug.list")}}">dbDebug</a></li>
+		<li><a href="{{url_for("web.overlays.autoindex")}}">Overlays</a></li>
 		<li><a href="{{url_for("web.repo.autoindex")}}">Repo</a></li>
 	  {% endif  %}
 	  {% if session.user %}

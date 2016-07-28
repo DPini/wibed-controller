@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-
+# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 import os
 import logging
 
@@ -20,7 +20,10 @@ def create_app(config_object="settings.DevelopmentConfig"):
 
     #Define log level
     logLevel= logging.DEBUG if app.debug else logging.INFO
-    logging.basicConfig(filename='/var/log/wibed-server.log',level = logLevel)
+    if not os.path.isdir(app.config["LOG_DIR"]):
+        os.makedirs(app.config["LOG_DIR"])
+    logFile = os.path.join(app.config["LOG_DIR"],"wibed-server.log")
+    logging.basicConfig(filename=logFile,level = logLevel)
     logging.info('Started')
     logging.debug('Debug mode enabled')
 

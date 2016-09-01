@@ -2,7 +2,7 @@
 
 from flask import Blueprint
 from flask import request, render_template, flash, redirect, \
-                  url_for, session, current_app as app
+					url_for, session, current_app as app
 from database import db
 from models.experiment import Experiment
 from models.node import Node
@@ -22,7 +22,7 @@ def index():
 	jsTopo = os.path.join(JS,"topo.js")
 	if not os.path.isfile(jsTopo):
 		getData()
-    	nodes = Node.query.all()
+	nodes = Node.query.all()
 	nodesDict = {}
 	for node in nodes:
 		nodesDict.update({str(node.id) : {'status' : node.status.name, 'testbed' : node.testbed,'gw' : node.gateway}})
@@ -33,7 +33,7 @@ def index():
 @bpTopology.route("/getresults")
 def getresults():
 	getData()
-    	nodes = Node.query.all()
+	nodes = Node.query.all()
 	nodesDict = {}
 	for node in nodes:
 		nodesDict.update({str(node.id) : {'status' : node.status.name, 'testbed' : node.testbed,'gw' : node.gateway}})
@@ -47,7 +47,7 @@ def getData():
 	# Find latest experiment
 	experiment = Experiment.query.filter( Experiment.name == EXP_NAME).order_by(db.desc(Experiment.finishTime)).first()
 	logging.debug("%s,%s",experiment.id,experiment.name)
-	
+
 	# Create list of nodes in vis.js format
 	nodes = experiment.nodes.all()
 	for node in nodes:
@@ -56,7 +56,7 @@ def getData():
 		node_js= {"id": node.id, "group":'idle'}
 		nodes_js.append(node_js)
 	logging.debug(nodes_js)
-	
+
 	# Create list of edje in vis.js format reading from the result files
 	## Recover name of results directory
 	resultName = EXP_NAME+"_"+str(experiment.creationTime)
@@ -65,7 +65,7 @@ def getData():
 	RESULTS_DIR = app.config["RESULTS_DIR"]
 	TOPO_RESULTS = os.path.join(RESULTS_DIR,resultName)
 	logging.debug(TOPO_RESULTS)
-	
+
 	for node in nodes:
 		NODE_TOPO_RESULTS = os.path.join(TOPO_RESULTS,resultName+"_"+node.id,"topo.txt")
 		logging.debug("NODE TOPO RESULTS 1 %s",NODE_TOPO_RESULTS)
@@ -73,14 +73,16 @@ def getData():
 		for line in infile:
 			tmp = line.rstrip('\n')
 			tmp = tmp.split(',')
-			nodeTo = [n for n in nodes if n.id == tmp[0]][0]
-			# Using New ID
-			#toId = nodes.index(nodeTo)
-			#edge_js = { "from": nodes.index(node), "to": toId, "value": tmp[1], "label": tmp[1]}
-			toId = nodeTo.id
-			edge_js = { "from": node.id, "to": toId, "value": tmp[1], "label": tmp[1]}
-			edges_js.append(edge_js)
-	
+			nodesTo = [n for n in nodes if n.id == tmp[0]]
+			if nodesTo:
+				nodeTo = nodesTo[0]
+				# Using New ID
+				#toId = nodes.index(nodeTo)
+				#edge_js = { "from": nodes.index(node), "to": toId, "value": tmp[1], "label": tmp[1]}
+				toId = nodeTo.id
+				edge_js = { "from": node.id, "to": toId, "value": tmp[1], "label": tmp[1]}
+				edges_js.append(edge_js)
+
 	# Write nodes and edjes in json format in javascript file static/js/topo.js
 	JS = app.config["JS_DIR"]
 	jsTopo = os.path.join(JS,"topo.js")
@@ -94,4 +96,3 @@ def getData():
 		f.write("%s,\n" % json.dumps(item))
 	print>> f, "];"
 	f.close()
-

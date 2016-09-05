@@ -29,6 +29,9 @@
         </button>
         <a class="navbar-brand" href="/">Wibed Server</a>
       </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="http://wiki.confine-project.eu/wibed:start"><span class="glyphicon glyphicon-book"></span>Documentation</a></li>
+        </ul>
       </div>
     </div>
 
@@ -45,17 +48,17 @@
           <div class="alert alert-warning">{{ message }}</div>
       {% endfor %}
       </div>
-      
+
       <div class="row">
       {% for message in form.name.errors %}
           <div class="alert alert-warning">{{ message }}</div>
       {% endfor %}
       </div>
-      
+
       <h2>Login</h2>
         <form action="{{ url_for('login') }}" method=post>
 		{{ form.hidden_tag() }}
-		
+
 		{{ form.name.label }}:</br>
 		{{ form.name }}
 		</br>
@@ -71,7 +74,7 @@
 
   <script src="{{ url_for("static", filename="js/jquery-1.10.2.min.js") }}"></script>
   <script src="{{ url_for("static", filename="js/bootstrap.min.js") }}"></script>
-  
+
 
 </body>
 </html>

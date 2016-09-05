@@ -28,7 +28,7 @@
     }
     .logout:hover {
     		color: rgb(42, 100, 150);
-        
+
     }
     a:visited{
 	color: rgb(51,51,51);
@@ -73,6 +73,9 @@
 		<span class="navbar-btn"><li><a class="logout" href="{{url_for("logout")}}">Log Out</a></li>
 	  {% endif %}
         </ul>
+        <ul class="nav navbar-nav navbar-right">
+                <li><a href="http://wiki.confine-project.eu/wibed:start"><span class="glyphicon glyphicon-book"></span>Documentation</a></li>
+        </ul>
       </div>
     </div>
   </div>
@@ -84,7 +87,7 @@
           <div class="alert alert-info">{{ message }}</div>
         {% endfor %}
       </div>
-     
+
       <script src="{{ url_for("static", filename="js/jquery-1.10.2.min.js") }}"></script>
 {% endblock %}
 
@@ -92,7 +95,7 @@
   {{ super() }}
   </div>
   </div>
-  
+
   <script src="{{ url_for("static", filename="js/bootstrap.min.js") }}"></script>
 
 {% endblock %}
